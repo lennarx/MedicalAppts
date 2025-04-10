@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalAppts.Api", "MedicalAppts.Api\MedicalAppts.Api.csproj", "{C9F7AC32-FF71-4F01-9F84-C11A95955737}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalAppts.Core", "MedicalAppts.Core\MedicalAppts.Core.csproj", "{E8314BA8-6118-4C5E-AD60-C54BEA6B362E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalAppts.Infrastructure", "MedicalAppts.Infrastructure\MedicalAppts.Infrastructure.csproj", "{1A5B7065-DE5C-4A21-B560-0E0530DDDCC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalAptts.UseCases", "MedicalAptts.UseCases\MedicalAptts.UseCases.csproj", "{9132901F-F1AB-4FF4-ADB2-8A899443F945}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4125A9DC-E6E0-4CDD-897D-B484BBEBAB28}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9F7AC32-FF71-4F01-9F84-C11A95955737}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9F7AC32-FF71-4F01-9F84-C11A95955737}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9F7AC32-FF71-4F01-9F84-C11A95955737}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9F7AC32-FF71-4F01-9F84-C11A95955737}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8314BA8-6118-4C5E-AD60-C54BEA6B362E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8314BA8-6118-4C5E-AD60-C54BEA6B362E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8314BA8-6118-4C5E-AD60-C54BEA6B362E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8314BA8-6118-4C5E-AD60-C54BEA6B362E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A5B7065-DE5C-4A21-B560-0E0530DDDCC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A5B7065-DE5C-4A21-B560-0E0530DDDCC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A5B7065-DE5C-4A21-B560-0E0530DDDCC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A5B7065-DE5C-4A21-B560-0E0530DDDCC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9132901F-F1AB-4FF4-ADB2-8A899443F945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9132901F-F1AB-4FF4-ADB2-8A899443F945}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9132901F-F1AB-4FF4-ADB2-8A899443F945}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9132901F-F1AB-4FF4-ADB2-8A899443F945}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4125A9DC-E6E0-4CDD-897D-B484BBEBAB28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4125A9DC-E6E0-4CDD-897D-B484BBEBAB28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4125A9DC-E6E0-4CDD-897D-B484BBEBAB28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4125A9DC-E6E0-4CDD-897D-B484BBEBAB28}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

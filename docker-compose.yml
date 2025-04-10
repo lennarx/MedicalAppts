@@ -1,0 +1,6 @@
+services:
+  medicalappts.api:
+    image: ${DOCKER_REGISTRY-}medicalapptsapi
+    build:
+      context: .
+      dockerfile: MedicalAppts.Api/Dockerfile
