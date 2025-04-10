@@ -7,6 +7,6 @@
         public string PhoneNumber { get; set; }
         public DateTime DateOfBirth { get; set; }
 
-        public ICollection<Appointment> Appointments { get; set; }
+        public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }

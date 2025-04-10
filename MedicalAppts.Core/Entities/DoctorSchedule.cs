@@ -2,7 +2,7 @@
 {
     public class DoctorSchedule : BaseEntity
     {
-        public Doctor Doctor { get; set; }
+        public virtual Doctor Doctor { get; set; }
         public int DoctorId { get; set; }
         public TimeSpan StartTime { get; set; }
 

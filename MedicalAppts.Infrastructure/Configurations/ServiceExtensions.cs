@@ -1,6 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MedicalAppts.Core.Contracts;
+using MedicalAppts.Core.Contracts.Repositories;
+using MedicalAppts.Infrastructure.Implementations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace MedicalAppts.Infrastructure.Configurations
 {
@@ -13,11 +17,19 @@ namespace MedicalAppts.Infrastructure.Configurations
                 options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
                 options.EnableDetailedErrors();
             });
-            //services.AddScoped<IJwtService, JwtService>();
-            //services.AddScoped<ICacheService, CacheService>();
-            //services.AddScoped(typeof(IAtmRepository<>), typeof(AtmRepository<>));
+
+            services.AddSingleton<IConnectionMultiplexer>(sp =>
+                ConnectionMultiplexer.Connect(config["Reddis:Host"]));
+
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<ICacheService, ReddisCacheService>();
+            services.AddScoped<IDoctorsRepository ,DoctorsRepository>();
+            services.AddScoped<IPatientsRepository, PatientsRepository>();
+            services.AddScoped<IAppointmentsRepository, AppointmentsRepository>();
+            services.AddScoped<IDoctorsScheduleRepository, DoctorsScheduleRepository>();
 
             return services;
         }
+
     }
 }

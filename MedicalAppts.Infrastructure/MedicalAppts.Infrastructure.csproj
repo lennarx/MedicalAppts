@@ -14,16 +14,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Implementations\" />
-    <Folder Include="Settings\" />
+    <PackageReference Include="StackExchange.Redis" Version="2.8.31" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MedicalAppts.Core\MedicalAppts.Core.csproj" />
     <ProjectReference Include="..\MedicalAptts.UseCases\MedicalAptts.UseCases.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+    <Folder Include="Settings\" />
   </ItemGroup>
 
 </Project>
