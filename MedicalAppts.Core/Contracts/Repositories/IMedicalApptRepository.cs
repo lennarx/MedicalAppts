@@ -6,10 +6,12 @@ namespace MedicalAppts.Core.Contracts.Repositories
     {
         Task<T> GetByIdAsync(int id);
         Task<IEnumerable<T>> GetAllAsync();
-        IEnumerable<T> GetFiltered(Func<T, bool> predicate);
+        IEnumerable<T> GetFiltered(Func<T, bool> predicate, bool trackEntities = false);
         Task AddAsync(T entity);
         Task AddRangeAsync(IEnumerable<T> entities);
-        void UpdateAsync(T entity);
-        Task DeleteAsync(int id);        
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(int id);
+        void SaveChanges();
+        Task SaveChangesAsync();
     }
 }

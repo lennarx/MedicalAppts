@@ -4,6 +4,7 @@ using MedicalAppts.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalAppts.Infrastructure.Migrations
 {
     [DbContext(typeof(MedicalApptsDbContext))]
-    partial class MedicalApptsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250410195225_UserAndDoctorPwd")]
+    partial class UserAndDoctorPwd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,9 +85,6 @@ namespace MedicalAppts.Infrastructure.Migrations
                     b.Property<int>("Specialty")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserRole")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Doctors");
@@ -143,9 +143,6 @@ namespace MedicalAppts.Infrastructure.Migrations
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserRole")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

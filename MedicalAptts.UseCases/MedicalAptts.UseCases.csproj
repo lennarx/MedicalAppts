@@ -10,4 +10,15 @@
     <ProjectReference Include="..\MedicalAppts.Core\MedicalAppts.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Appointment\GetScheduledAppointment\" />
+    <Folder Include="Appointment\GetFreeAppointmentsPerDoctor\" />
+    <Folder Include="Appointment\GetFreeDoctorPerSpecialty\" />
+    <Folder Include="Appointment\SetAppointment\" />
+    <Folder Include="Doctor\GetDoctorSchedule\" />
+    <Folder Include="Doctor\GetDoctorBySpecialty\" />
+    <Folder Include="Doctor\SetDoctorSchedule\" />
+    <Folder Include="Patient\" />
+  </ItemGroup>
+
 </Project>

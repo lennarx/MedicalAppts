@@ -12,6 +12,11 @@ namespace MedicalAppts.Infrastructure.Implementations
             return await _dbSet.Where(x => x.AppointmentDate.Date == date.Date && x.DoctorId == doctorId).AsNoTracking().ToListAsync();
         }
 
+        public async Task<Appointment> GetAppointmentsByDateAndPatientIdAsync(DateTime appointmentDate, int patientId)
+        {
+            return await _dbSet.FirstOrDefaultAsync(x => x.AppointmentDate.Date == appointmentDate.Date && x.PatientId == patientId);
+        }
+
         public async Task<IEnumerable<Appointment>> GetAppointmentsByDateAsync(DateTime date)
         {
             return await _dbSet

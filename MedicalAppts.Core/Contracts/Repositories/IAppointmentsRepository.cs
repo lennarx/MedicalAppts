@@ -8,5 +8,6 @@ namespace MedicalAppts.Core.Contracts.Repositories
         Task<IEnumerable<Appointment>> GetAppointmentsByDoctorIdAsync(int doctorId);
         Task<IEnumerable<Appointment>> GetAppointmentsByDateAsync(DateTime date);
         Task<IEnumerable<Appointment>> GetAppointmentsByDateAndDoctorIdAsync(DateTime date, int doctorId);
+        Task<Appointment> GetAppointmentsByDateAndPatientIdAsync(DateTime appointmentDate, int patientId);
     }
 }

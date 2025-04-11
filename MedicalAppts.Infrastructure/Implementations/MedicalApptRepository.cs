@@ -8,24 +8,28 @@ namespace MedicalAppts.Infrastructure.Implementations
     {
         private readonly MedicalApptsDbContext _context = context;
         protected readonly DbSet<T> _dbSet;   
+
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
+            await SaveChangesAsync();
         }
         public async Task AddRangeAsync(IEnumerable<T> entities)
         {
             await _dbSet.AddRangeAsync(entities);
+            await SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
             var entity = await GetByIdAsync(id);
             _dbSet.Remove(entity);
+            await SaveChangesAsync();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _dbSet.ToListAsync();
+            return await _dbSet.AsNoTracking().ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -33,15 +37,25 @@ namespace MedicalAppts.Infrastructure.Implementations
             return await _dbSet.FindAsync(id);
         }
 
-        public IEnumerable<T> GetFiltered(Func<T, bool> predicate)
+        public IEnumerable<T> GetFiltered(Func<T, bool> predicate, bool trackEntities = false)
         {
-            return _dbSet.Where(predicate).ToList();
+            return trackEntities == true ? _dbSet.Where(predicate).ToList() : _dbSet.AsNoTracking().Where(predicate).ToList();
         }
 
-        public void UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
+            await SaveChangesAsync();
         }
 
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }
