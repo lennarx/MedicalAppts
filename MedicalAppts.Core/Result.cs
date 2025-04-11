@@ -24,6 +24,7 @@
         public static implicit operator Result<TValue, TError>(TValue value) => new Result<TValue, TError>(value);
 
         public static implicit operator Result<TValue, TError>(TError error) => new Result<TValue, TError>(error);
+        public static Result<TValue, TError> Success(TValue value) => new Result<TValue, TError>(value);
 
         public Result<TValue, TError> Match(Func<TValue, Result<TValue, TError>> success, Func<TError, Result<TValue, TError>> failure)
         {
