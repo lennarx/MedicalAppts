@@ -14,8 +14,6 @@
     <Folder Include="Appointment\GetAppointmentsPerPatient\" />
     <Folder Include="Appointment\GetFreeDoctorPerSpecialty\" />
     <Folder Include="Appointment\SetAppointment\" />
-    <Folder Include="Doctor\GetDoctorBySpecialty\" />
-    <Folder Include="Doctor\SetDoctorSchedule\" />
     <Folder Include="Patient\" />
   </ItemGroup>
 

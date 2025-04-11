@@ -26,5 +26,23 @@ namespace MedicalAptts.UseCases.Helpers.Extensions
                 EndTime = schedule.EndTime.Hours * 100 + schedule.EndTime.Minutes
             };
         }
+
+        public static IEnumerable<DoctorDTO> MapToDoctorDTOs(this IEnumerable<MedicalAppts.Core.Entities.Doctor> doctors)
+        {
+            return doctors.Select(x => new DoctorDTO
+            {
+                Name = x.Name,
+                Specialty = x.Specialty
+            });
+        }
+
+        public static DoctorDTO MapToDoctorDTO(this MedicalAppts.Core.Entities.Doctor doctor)
+        {
+            return new DoctorDTO
+            {
+                Name = doctor.Name,
+                Specialty = doctor.Specialty
+            };
+        }
     }
 }
