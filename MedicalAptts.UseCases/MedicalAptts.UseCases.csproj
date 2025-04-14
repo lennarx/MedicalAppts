@@ -11,10 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Appointment\GetAppointmentsPerPatient\" />
-    <Folder Include="Appointment\GetFreeDoctorPerSpecialty\" />
-    <Folder Include="Appointment\SetAppointment\" />
-    <Folder Include="Patient\" />
+    <Folder Include="Appointment\GetAvailableDoctorPerSpecialty\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
   </ItemGroup>
 
 </Project>

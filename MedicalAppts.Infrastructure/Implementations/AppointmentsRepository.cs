@@ -7,14 +7,19 @@ namespace MedicalAppts.Infrastructure.Implementations
     public class AppointmentsRepository : MedicalApptRepository<Appointment>, IAppointmentsRepository
     {
         public AppointmentsRepository(MedicalApptsDbContext context) : base(context) { }
-        public async Task<IEnumerable<Appointment>> GetAppointmentsByDateAndDoctorIdAsync(DateTime date, int doctorId)
+
+        public async Task<IEnumerable<Appointment>> GetAppointmentsByDateAndDoctorIdAsync(DateTime? date, int doctorId)
         {
-            return await _dbSet.Where(x => x.AppointmentDate.Date == date.Date && x.DoctorId == doctorId).AsNoTracking().ToListAsync();
+            return await _dbSet.Include(x => x.Doctor)
+                .Include(x => x.Patient).
+                Where(x => x.DoctorId == doctorId && (!date.HasValue || x.AppointmentDate.Date == date.Value.Date)).AsNoTracking().ToListAsync();
         }
 
-        public async Task<Appointment> GetAppointmentsByDateAndPatientIdAsync(DateTime appointmentDate, int patientId)
+        public async Task<IEnumerable<Appointment>> GetAppointmentsByDateAndPatientIdAsync(DateTime? date, int patientId)
         {
-            return await _dbSet.FirstOrDefaultAsync(x => x.AppointmentDate.Date == appointmentDate.Date && x.PatientId == patientId);
+            return await _dbSet.Include(x => x.Doctor)
+                .Include(x => x.Patient)
+                .Where(x => x.PatientId == patientId && (!date.HasValue || x.AppointmentDate.Date == date.Value.Date)).AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsByDateAsync(DateTime date)
@@ -33,6 +38,13 @@ namespace MedicalAppts.Infrastructure.Implementations
         public async Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId)
         {
             return await _dbSet.Where(x => x.PatientId == patientId).AsNoTracking().ToListAsync();
+        }
+
+        public override async Task<Appointment> GetByIdAsync(int id)
+        {
+            return await _dbSet.Include(x => x.Doctor)
+                .Include(x => x.Patient)
+                .FirstOrDefaultAsync(appt => appt.Id == id);
         }
     }
 }

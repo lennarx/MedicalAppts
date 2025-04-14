@@ -1,35 +1,45 @@
 ﻿using MediatR;
 using MedicalAppts.Core;
 using MedicalAppts.Core.Contracts.Repositories;
-using MedicalAppts.Core.Enums;
 using MedicalAppts.Core.Errors;
+using MedicalAppts.Core.Events;
+using MedicalAptts.UseCases.Helpers.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Appointment.CancelAppointment
 {
-    public class CancelAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository) : IRequestHandler<CancelAppointmentCommand, Result<AppointmentDTO, Error>>
+    public class CancelAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IDoctorsRepository doctorsRespository, IPatientsRepository patientsRepository, ILogger logger, IMediator mediator) : IRequestHandler<CancelAppointmentCommand, Result<AppointmentDTO, Error>>
     {
         private readonly IAppointmentsRepository _appointmentsRepository = appointmentsRepository;
+        private readonly ILogger _logger = logger;
+        private readonly IDoctorsRepository _doctorsRepository = doctorsRespository;
+        private readonly IPatientsRepository _patientsRepository = patientsRepository;
+        private readonly IMediator _mediator = mediator;
         public async Task<Result<AppointmentDTO, Error>> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
         {
-            var appointment = await _appointmentsRepository.GetAppointmentsByDateAndPatientIdAsync(request.AppointmentDate, request.PatientId);
+            var appointmentToCancel = await _appointmentsRepository.GetByIdAsync(request.AppointmentId);
 
-            if (appointment is null)
+            if (appointmentToCancel is null)
             {
-                return GenericErrors.AppointmentNotFound;
+                _logger.LogError($"Appointment with id {request.AppointmentId} not found");
+                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentNotFound);
             }
 
-            appointment.Status = AppointmentStatus.CANCELLED;
-            appointment.Notes = request.Reason;
-            await _appointmentsRepository.UpdateAsync(appointment);
+            appointmentToCancel.Status = MedicalAppts.Core.Enums.AppointmentStatus.CANCELLED;
 
-            return new AppointmentDTO
+            try
             {
-                Patient = appointment.Patient.Name,
-                Doctor = appointment.Doctor.Name,
-                AppointmentDate = appointment.AppointmentDate,
-                Status = appointment.Status,
-                Notes = appointment.Notes
-            };
+                await _appointmentsRepository.UpdateAsync(appointmentToCancel);
+
+                await _mediator.Publish(new AppointmentCanceledEvent(appointmentToCancel.Doctor.Email, appointmentToCancel.Patient.Name, appointmentToCancel.Patient.Email, appointmentToCancel.AppointmentDate.ToString("dd-mm-YYYY")));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Appointment with id {request.AppointmentId} could not be cancelled");
+                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentCancellationError);
+            }
+
+            return Result<AppointmentDTO, Error>.Success(appointmentToCancel.MapToAppointmentDTO());
         }
     }
 }

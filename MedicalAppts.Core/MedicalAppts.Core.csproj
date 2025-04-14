@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="EventHandlers\" />
-    <Folder Include="Events\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -14,6 +14,9 @@ namespace MedicalAppts.Infrastructure.Configurations
 
             builder.Property(b => b.PasswordHash)
                 .IsRequired();
+
+            builder.Property(b => b.UserStatus)
+                .IsRequired();
         }
     }
 }

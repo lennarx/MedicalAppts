@@ -32,7 +32,7 @@ namespace MedicalAppts.Infrastructure.Implementations
             return await _dbSet.AsNoTracking().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async virtual Task<T> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }

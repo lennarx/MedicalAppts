@@ -11,7 +11,7 @@ namespace MedicalAppts.Infrastructure.Implementations
     {
         private readonly IConfiguration _configuration = configuration;
 
-        public string GenerateToken(string userId, string role)
+        public string GenerateToken(string userEmail, string role)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:TokenSecretKey"]);
@@ -19,7 +19,7 @@ namespace MedicalAppts.Infrastructure.Implementations
             {
                 Subject = new ClaimsIdentity(
                 [
-                     new Claim(JwtRegisteredClaimNames.UniqueName, userId.ToString()),
+                     new Claim(JwtRegisteredClaimNames.UniqueName, userEmail.ToString()),
                      new Claim(JwtRegisteredClaimNames.Sub, role.ToString()), 
                 ]),
                 Expires = DateTime.UtcNow.AddHours(1),
