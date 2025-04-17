@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Users.Login
 {
-    public class LoginCommandHandler(IDoctorsRepository doctorsRepository, IPatientsRepository patientRepository, ILogger logger, ICacheService cacheService, IMediator mediator, IJwtService jwtService) : IRequestHandler<LoginCommand, Result<string, Error>>
+    public class LoginCommandHandler(IDoctorsRepository doctorsRepository, IPatientsRepository patientRepository, ILogger<LoginCommandHandler> logger, ICacheService cacheService, IMediator mediator, IJwtService jwtService) : IRequestHandler<LoginCommand, Result<string, Error>>
     {
         private readonly ILogger<LoginCommandHandler> _logger;
         private readonly IDoctorsRepository _doctorsRepository = doctorsRepository;

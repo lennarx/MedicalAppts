@@ -8,10 +8,11 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Appointment.CancelAppointment
 {
-    public class CancelAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IDoctorsRepository doctorsRespository, IPatientsRepository patientsRepository, ILogger logger, IMediator mediator) : IRequestHandler<CancelAppointmentCommand, Result<AppointmentDTO, Error>>
+    public class CancelAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IDoctorsRepository doctorsRespository, IPatientsRepository patientsRepository,
+        ILogger<CancelAppointmentCommand> logger, IMediator mediator) : IRequestHandler<CancelAppointmentCommand, Result<AppointmentDTO, Error>>
     {
         private readonly IAppointmentsRepository _appointmentsRepository = appointmentsRepository;
-        private readonly ILogger _logger = logger;
+        private readonly ILogger<CancelAppointmentCommand> _logger = logger;
         private readonly IDoctorsRepository _doctorsRepository = doctorsRespository;
         private readonly IPatientsRepository _patientsRepository = patientsRepository;
         private readonly IMediator _mediator = mediator;

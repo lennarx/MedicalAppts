@@ -8,12 +8,13 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Appointment.SetAppointment
 {
-    public class SetAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IPatientsRepository patientsRepository, IDoctorsRepository doctorsRepository, ILogger logger, IMediator mediator) : IRequestHandler<SetAppointmentCommand, Result<AppointmentDTO, Error>>
+    public class SetAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IPatientsRepository patientsRepository, IDoctorsRepository doctorsRepository,
+        ILogger<SetAppointmentCommandHandler> logger, IMediator mediator) : IRequestHandler<SetAppointmentCommand, Result<AppointmentDTO, Error>>
     {
         private readonly IAppointmentsRepository _appointmentsRepository = appointmentsRepository;
         private readonly IPatientsRepository _patientRepository = patientsRepository;
         private readonly IDoctorsRepository _doctorsRepository = doctorsRepository;
-        private readonly ILogger _logger = logger;
+        private readonly ILogger<SetAppointmentCommandHandler> _logger = logger;
         private readonly IMediator _mediator = mediator;
         public async Task<Result<AppointmentDTO, Error>> Handle(SetAppointmentCommand request, CancellationToken cancellationToken)
         {

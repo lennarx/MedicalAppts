@@ -10,16 +10,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="8.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.1" />
   </ItemGroup>
 
   <ItemGroup>

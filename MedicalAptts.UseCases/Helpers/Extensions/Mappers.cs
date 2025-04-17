@@ -73,6 +73,7 @@ namespace MedicalAptts.UseCases.Helpers.Extensions
         {
             return patients.Select(x => new PatientDTO
             {
+                PatientId = x.Id,
                 Name = x.Name,
                 DateOfbirth = x.DateOfBirth.ToString("dd-mm-YYYY"),
                 Email = x.Email,
@@ -84,6 +85,7 @@ namespace MedicalAptts.UseCases.Helpers.Extensions
         {
             return new PatientDTO
             {
+                PatientId = patient.Id,
                 Name = patient.Name,
                 DateOfbirth = patient.DateOfBirth.ToString("dd-mm-YYYY"),
                 Email = patient.Email,

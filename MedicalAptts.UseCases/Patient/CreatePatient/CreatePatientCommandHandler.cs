@@ -9,10 +9,10 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Patient.CreatePatient
 {
-    public class CreatePatientCommandHandler(IPatientsRepository patientsRepository, ILogger logger, IMediator mediator) : IRequestHandler<CreatePatientCommand, Result<PatientDTO, Error>>
+    public class CreatePatientCommandHandler(IPatientsRepository patientsRepository, ILogger<CreatePatientCommandHandler> logger, IMediator mediator) : IRequestHandler<CreatePatientCommand, Result<PatientDTO, Error>>
     {
         private readonly IPatientsRepository _patientsRepository = patientsRepository;
-        private readonly ILogger _logger;
+        private readonly ILogger<CreatePatientCommandHandler> _logger;
         private readonly IMediator _mediator;
         public async Task<Result<PatientDTO, Error>> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
         {
