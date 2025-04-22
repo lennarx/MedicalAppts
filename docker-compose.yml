@@ -10,7 +10,7 @@ services:
       - sqlserver
       - redis
     environment:
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MedicalApptsDb;User=sa;Password=P@55w0rd_fgr_2025;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MedicalApptsDb;User=sa;Password=P@55w0rd_fgr_2025;Encrypt=false;TrustServerCertificate=true;
       - Redis__Host=redis
     networks:
       - apptnet
