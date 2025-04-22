@@ -22,7 +22,8 @@ namespace MedicalAppts.Infrastructure.Configuration
                 .IsRequired();
 
             builder.Property(a => a.ReasonForVisit)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(a => a.Status)
                 .IsRequired()
@@ -30,7 +31,7 @@ namespace MedicalAppts.Infrastructure.Configuration
 
             builder.Property(a => a.Notes)
                 .HasMaxLength(500)
-                .IsRequired();
+                .IsRequired(false);
         }
     }
 }
