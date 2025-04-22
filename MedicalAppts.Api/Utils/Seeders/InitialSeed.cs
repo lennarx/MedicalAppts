@@ -12,16 +12,15 @@ namespace MedicalAppts.Api.Utils.Seeders
             if (!context.Patients.Any())
             {
                 var hasher = new PasswordHasher();
-                var admin = new Patient
+                var admin = new User
                 {
-                    Name = "Admin",
-                    PhoneNumber = "1234567890",
+                    Name = "Franco Admin",
                     PasswordHash = hasher.HashPassword("Admin123!"),
                     UserRole = UserRole.ADMIN,
                     Email = "admin@medicalapp.com"
                 };
 
-                context.Patients.Add(admin);
+                context.Users.Add(admin);
                 await context.SaveChangesAsync();
             }
         }
