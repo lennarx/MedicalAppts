@@ -4,10 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalAppts.Infrastructure.Implementations
 {
-    public abstract class MedicalApptRepository<T>(MedicalApptsDbContext context) : IMedicalApptRepository<T> where T : BaseEntity
+    public abstract class MedicalApptRepository<T> : IMedicalApptRepository<T> where T : BaseEntity
     {
-        private readonly MedicalApptsDbContext _context = context;
+        private readonly MedicalApptsDbContext _context;
         protected readonly DbSet<T> _dbSet;   
+
+        public MedicalApptRepository(MedicalApptsDbContext context)
+        {
+            _context = context;
+            _dbSet = _context.Set<T>();
+        }
 
         public async Task AddAsync(T entity)
         {
