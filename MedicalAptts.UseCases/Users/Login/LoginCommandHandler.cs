@@ -11,30 +11,20 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Users.Login
 {
-    public class LoginCommandHandler(IDoctorsRepository doctorsRepository, IPatientsRepository patientRepository, ILogger<LoginCommandHandler> logger, ICacheService cacheService, IMediator mediator, IJwtService jwtService) : IRequestHandler<LoginCommand, Result<string, Error>>
+    public class LoginCommandHandler(IUserRepository userRepository, ILogger<LoginCommandHandler> logger, ICacheService cacheService, IMediator mediator, IJwtService jwtService) : IRequestHandler<LoginCommand, Result<string, Error>>
     {
         private readonly ILogger<LoginCommandHandler> _logger = logger;
-        private readonly IDoctorsRepository _doctorsRepository = doctorsRepository;
-        private readonly IPatientsRepository _patientRepository = patientRepository;
         private readonly ICacheService _cacheService = cacheService;
         private readonly IMediator _mediator = mediator;
         private readonly IJwtService _jwtService = jwtService;
+        private readonly IUserRepository _userRepository = userRepository;
         public async Task<Result<string, Error>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            IUserRepository userRepository;
-            if (request.UserRole == UserRole.DOCTOR)
-            {
-                userRepository = _doctorsRepository;
-            }
-            else
-            {
-                userRepository = _patientRepository;
-            }
-            var user = await userRepository.GetUserByIdAsync(request.UserId);
+            var user = _userRepository.GetFiltered(x => x.Email.Equals(request.Email), true).FirstOrDefault();
 
             if (user == null)
             {
-                _logger.LogError($"User with ID {request.UserId} not found.");
+                _logger.LogError($"User with email {request.Email} not found.");
                 return Result<string, Error>.Failure(LoginErrors.UserNotFound);
             }
 
@@ -57,7 +47,7 @@ namespace MedicalAptts.UseCases.Users.Login
                     await _mediator.Publish(new UserBlockedEvent(user.Id, user.Email), cancellationToken);
                     _logger.LogError($"Too many login attempts, user: {user.Email} is blocked");
                     user.UserStatus = UserStatus.BLOCKED;
-                    await userRepository.UpdateUserAsync(user);
+                    await _userRepository.UpdateAsync(user);
                     return LoginErrors.UserBlocked;
                 }
                 else
@@ -67,7 +57,7 @@ namespace MedicalAptts.UseCases.Users.Login
                 }
             }
 
-            return _jwtService.GenerateToken(user.Email, request.UserRole.ToString());
+            return _jwtService.GenerateToken(user.Email, user.UserRole.ToString());
         }
     }
 }

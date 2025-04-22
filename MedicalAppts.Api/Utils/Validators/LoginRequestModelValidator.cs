@@ -7,9 +7,6 @@ namespace MedicalAppts.Api.Utils.Validators
     {
         public LoginRequestModelValidator()
         {
-            RuleFor(model => model.UserId)
-             .NotEmpty();
-
             RuleFor(model => model.Email)
              .NotEmpty()
                 .WithMessage("Email is required.")
@@ -21,10 +18,6 @@ namespace MedicalAppts.Api.Utils.Validators
             RuleFor(model => model.Password)
                 .NotEmpty()
                 .WithMessage("Passwordis required.");
-
-            RuleFor(model => model.UserRole)
-                .NotEmpty()
-                .WithMessage("User role is required.");
         }
     }
 }

@@ -38,7 +38,7 @@ namespace MedicalAppts.Api.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
 
-            var loginCommand = new LoginCommand(loginForm.UserId, loginForm.Email, loginForm.Password, loginForm.UserRole);
+            var loginCommand = new LoginCommand(loginForm.Email, loginForm.Password);
             var loginResult = (await _mediator.Send(loginCommand, CancellationToken.None))
                             .Match(resultValue => resultValue, error => error);
 
