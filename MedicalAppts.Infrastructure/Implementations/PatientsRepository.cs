@@ -9,12 +9,7 @@ namespace MedicalAppts.Infrastructure.Implementations
         {
         }
 
-        public async Task<BaseUser?> GetUserByIdAsync(int id)
-        {
-            return await _dbSet.FindAsync(id);
-        }
-
-        public async Task UpdateUserAsync(BaseUser user)
+        public async Task UpdateUserAsync(User user)
         {
             await base.UpdateAsync((Patient)user);
         }
