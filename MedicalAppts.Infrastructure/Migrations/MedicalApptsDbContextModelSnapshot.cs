@@ -59,40 +59,6 @@ namespace MedicalAppts.Infrastructure.Migrations
                     b.ToTable("Appointments");
                 });
 
-            modelBuilder.Entity("MedicalAppts.Core.Entities.Doctor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Specialty")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserRole")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserStatus")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Doctors");
-                });
-
             modelBuilder.Entity("MedicalAppts.Core.Entities.DoctorSchedule", b =>
                 {
                     b.Property<int>("Id")
@@ -120,7 +86,7 @@ namespace MedicalAppts.Infrastructure.Migrations
                     b.ToTable("doctorSchedules");
                 });
 
-            modelBuilder.Entity("MedicalAppts.Core.Entities.Patient", b =>
+            modelBuilder.Entity("MedicalAppts.Core.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,8 +94,10 @@ namespace MedicalAppts.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -143,10 +111,6 @@ namespace MedicalAppts.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("UserRole")
                         .HasColumnType("int");
 
@@ -155,7 +119,35 @@ namespace MedicalAppts.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Users");
+
+                    b.HasDiscriminator().HasValue("User");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("MedicalAppts.Core.Entities.Doctor", b =>
+                {
+                    b.HasBaseType("MedicalAppts.Core.Entities.User");
+
+                    b.Property<int>("Specialty")
+                        .HasColumnType("int");
+
+                    b.HasDiscriminator().HasValue("Doctor");
+                });
+
+            modelBuilder.Entity("MedicalAppts.Core.Entities.Patient", b =>
+                {
+                    b.HasBaseType("MedicalAppts.Core.Entities.User");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Patient");
                 });
 
             modelBuilder.Entity("MedicalAppts.Core.Entities.Appointment", b =>
