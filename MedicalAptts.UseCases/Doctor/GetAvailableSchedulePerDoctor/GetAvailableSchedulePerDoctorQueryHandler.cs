@@ -35,21 +35,15 @@ namespace MedicalAptts.UseCases.Doctor.GetAvailableSchedulePerDoctor
                     Date = y.Key,
                     DoctorName = schedule.DoctorName,
                     DoctorId = schedule.DoctorId,
-                    AvailableTimeFramesPerDay = FilterBookedTimeFrames(y.Select(x => x.AppointmentDate.Hour), schedule.StartTime, schedule.EndTime)
+                    AvailableTimeFramesPerDay = FilterBookedTimeFrames(y.Select(x => x.AppointmentDate.Hour).ToHashSet(), (int)schedule.StartTime, (int)schedule.EndTime)
                 });
         }
 
-        private IEnumerable<double> FilterBookedTimeFrames(IEnumerable<int> apptHours, double startTime, double endTime)
+        private IEnumerable<int> FilterBookedTimeFrames(HashSet<int> apptHours, int startTime, int endTime)
         {
-            var availableTimeFrames = new List<double>();
-            for (double hour = startTime; hour < endTime; hour += 0.5)
-            {
-                if (!apptHours.Contains((int)hour))
-                {
-                    availableTimeFrames.Add(hour);
-                }
-            }
-            return availableTimeFrames;
+            return Enumerable.Range(startTime/100, endTime/100 - startTime/100)
+                .Where(hour => !apptHours.Contains(hour))
+                .ToList();
         }
     }
 }
