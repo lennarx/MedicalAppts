@@ -41,6 +41,8 @@ namespace MedicalAppts.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<AppointmentDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.DOCTOR)}")]
         public async Task<IActionResult> GetAppointmentsPerDoctor([FromRoute] int doctorId, [FromQuery] DateTime? appointmentDate)
         {
             var command = new GetAppointmentsPerDoctorQuery(doctorId, appointmentDate);
@@ -154,6 +156,7 @@ namespace MedicalAppts.Api.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(void), StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = $"{nameof(UserRole.ADMIN)}")]
         public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorForm createDoctorForm)
         {
             var command = new CreateDoctorCommand(createDoctorForm);
@@ -184,6 +187,7 @@ namespace MedicalAppts.Api.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(void), StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = $"{nameof(UserRole.ADMIN)}, {nameof(UserRole.DOCTOR)}")]
         public async Task<IActionResult> CreateDoctorSchedule([FromRoute] int doctorId, [FromBody] CreateDoctorScheduleForm createDoctorScheduleForm)
         {
             var command = new SetDoctorScheduleCommand(doctorId, createDoctorScheduleForm);

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MedicalAppts.Core;
+using MedicalAppts.Core.Enums;
 using MedicalAptts.UseCases.Appointment;
 using MedicalAptts.UseCases.Appointment.CancelAppointment;
 using MedicalAptts.UseCases.Appointment.GetAppointmentsPerDate;
@@ -35,6 +36,9 @@ namespace MedicalAppts.Api.Controllers
         )]
         [ProducesResponseType(typeof(IEnumerable<AppointmentDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = $"{nameof(UserRole.ADMIN)}")]
         public async Task<IActionResult> GetAppointmentsByDate([FromRoute] DateTime appointmentsDate)
         {
             var query = new GetAppointmentsPerDateQuery(appointmentsDate);
@@ -62,10 +66,12 @@ namespace MedicalAppts.Api.Controllers
         [ProducesResponseType(typeof(AppointmentDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(void), StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.PATIENT)}")]
         public async Task<IActionResult> CreateAppointment([FromBody] AppointmentCreationForm appointmentCreationForm)
-        {
+        {            
             var command = new SetAppointmentCommand(appointmentCreationForm.PatientId, appointmentCreationForm.DoctorId, appointmentCreationForm.AppointmentDate);
             var result = (await _mediator.Send(command))
                 .Match(resultValue => resultValue, error => error);
@@ -81,34 +87,5 @@ namespace MedicalAppts.Api.Controllers
                 return CreatedAtAction(nameof(CreateAppointment), new { id = result?.Value?.AppointmentId }, result?.Value);
             }
         }
-
-        [HttpPatch]
-        [Route("{appointmentId}/cancellation")]
-        [Produces("application/json")]
-        [SwaggerOperation(
-            Summary = "Cancels an appointment",
-            Description = "This endpoint is used to cancel appointments based on appointmentId"
-        )]
-        [ProducesResponseType(typeof(AppointmentDTO), StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> CancelAppointment([FromRoute] int appointmentId)
-        {
-            var command = new CancelAppointmentCommand(appointmentId);
-            var result = (await _mediator.Send(command))
-                .Match(resultValue => resultValue, error => error);
-
-            if (result.Error != null)
-            {
-                _logger.LogError(result.Error.Message);
-                return Problem(result.Error.Message, null, result.Error.HttpStatusCode);
-            }
-            else
-            {
-                _logger.LogInformation("Appointment cancelled successfully.");
-                return NoContent();
-            }
-        }    
-
     }
 }

@@ -20,7 +20,7 @@ namespace MedicalAppts.Api.Controllers
 
         [HttpPost]
         [SwaggerOperation(
-            Summary = "Creates a patient",
+            Summary = "Performs the authentication for the application",
             Description = "This endpoint is used to get the authorization token for using the other endpoints, using the " +
             "User Email and Password to authenticate. If the password is inputted 3 times wrong the user will be rendered inactive. ",
             OperationId = "login"
