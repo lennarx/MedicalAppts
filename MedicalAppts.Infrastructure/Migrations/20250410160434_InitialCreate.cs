@@ -72,7 +72,7 @@ namespace MedicalAppts.Infrastructure.Migrations
                     AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PatientId = table.Column<int>(type: "int", nullable: false),
                     DoctorId = table.Column<int>(type: "int", nullable: false),
-                    ReasonForVisit = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReasonForVisit = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
