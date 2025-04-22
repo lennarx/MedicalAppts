@@ -10,8 +10,8 @@ namespace MedicalAppts.Core.Entities
         public int PatientId { get; set; }
         public virtual Doctor Doctor { get; set; }
         public int DoctorId { get; set; }
-        public string ReasonForVisit { get; set; }
+        public string? ReasonForVisit { get; set; }
         public AppointmentStatus Status { get; set; }
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
     }
 }
