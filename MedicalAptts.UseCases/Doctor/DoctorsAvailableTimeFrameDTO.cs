@@ -5,6 +5,6 @@
         public int DoctorId { get; set; }
         public string DoctorName { get; set; }
         public DateTime Date { get; set; }
-        public IEnumerable<double> AvailableTimeFramesPerDay { get; set; } = new List<double>();
+        public IEnumerable<int> AvailableTimeFramesPerDay { get; set; } = new List<int>();
     }
 }
