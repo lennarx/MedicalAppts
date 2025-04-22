@@ -11,7 +11,7 @@ namespace MedicalAppts.Api.Configurations
             {
                 Title = "Medical Appointments Api Documentation",
                 Version = "v1",
-                Description = "This API allows you to perform appointments managements. Also allows you to create users (doctors and patientes)."
+                Description = "This API allows you to perform appointments managements. Also allows you to create users (doctors and patients)."
             };
 
             services.AddSwaggerGen(options =>
