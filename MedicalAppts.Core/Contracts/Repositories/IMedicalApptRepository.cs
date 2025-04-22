@@ -1,4 +1,5 @@
 ﻿using MedicalAppts.Core.Entities;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MedicalAppts.Core.Contracts.Repositories
 {
@@ -13,5 +14,7 @@ namespace MedicalAppts.Core.Contracts.Repositories
         Task DeleteAsync(int id);
         void SaveChanges();
         Task SaveChangesAsync();
+
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }
