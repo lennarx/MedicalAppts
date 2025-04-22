@@ -10,10 +10,6 @@ namespace MedicalAppts.Infrastructure.Configuration
         {
             builder.HasKey(p => p.Id);
 
-            builder.Property(p => p.Name)
-                .IsRequired()
-                .HasMaxLength(100);
-
             builder.Property(p => p.DateOfBirth);
 
             builder.Property(p => p.Email)

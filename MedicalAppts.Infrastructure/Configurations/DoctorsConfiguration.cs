@@ -9,9 +9,6 @@ namespace MedicalAppts.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<Doctor> builder)
         {
             builder.HasKey(d => d.Id);
-            builder.Property(d => d.Name)
-                .IsRequired()
-                .HasMaxLength(100);
 
             builder.Property(d => d.Specialty)
                 .IsRequired()
