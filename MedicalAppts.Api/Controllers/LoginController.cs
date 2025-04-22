@@ -1,11 +1,8 @@
 ﻿using MediatR;
 using MedicalAptts.UseCases.Users;
 using MedicalAptts.UseCases.Users.Login;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using System.Threading;
 using MedicalAppts.Api.Utils.Validators;
 
 namespace MedicalAppts.Api.Controllers
@@ -15,12 +12,10 @@ namespace MedicalAppts.Api.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<LoginController> _logger;
 
-        public LoginController(IMediator mediator, ILogger<LoginController> logger)
+        public LoginController(IMediator mediator)
         {
             _mediator = mediator;
-            _logger = logger;
         }
 
         [HttpPost]

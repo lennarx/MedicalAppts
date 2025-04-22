@@ -1,9 +1,12 @@
 ﻿using MediatR;
 using MedicalAppts.Api.Utils.Validators;
+using MedicalAptts.UseCases.Appointment;
 using MedicalAptts.UseCases.Patient;
 using MedicalAptts.UseCases.Patient.CreatePatient;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using MedicalAptts.UseCases.Appointment.GetAppointmentsPerPatient;
+using MedicalAppts.Core;
 
 namespace MedicalAppts.Api.Controllers
 {
@@ -20,19 +23,48 @@ namespace MedicalAppts.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        [Route("{patientId}/appointments")]
+        [Produces("application/json")]
+        [SwaggerOperation(
+           Summary = "Retrieves patients appointments",
+           Description = "This endpoint is used to retrieve appointments based on a patientId. Appointment date is optional"
+       )]
+        [ProducesResponseType(typeof(IEnumerable<AppointmentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetAppointmentsPerDoctor([FromRoute] int patientId, [FromQuery] DateTime? appointmentDate)
+        {
+            var command = new GetAppointmentsPerPatient(patientId, appointmentDate);
+            var result = (await _mediator.Send(command))
+                .Match(resultValue => Result<IEnumerable<AppointmentDTO>, Error>.Success(resultValue), error => error);
+
+            if (result.Error != null)
+            {
+                _logger.LogError(result.Error.Message);
+                return Problem(result.Error.Message, null, result.Error.HttpStatusCode);
+            }
+            else
+            {
+                _logger.LogInformation("Appointments per patient retrieved successfully.");
+                return Ok(result?.Value);
+            }
+        }
+
         [HttpPost]
         [SwaggerOperation(
             Summary = "Creates a patient",
             Description = "This endpoint is used to create a patient user in the system "
         )]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PatientDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(void), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreatePatient([FromBody] PatientCreationForm patientCreationForm)
         {
-            var validator = new PatientCreatiionFormValidator();
+            var validator = new PatientCreationFormValidator();
             var validationResult = await validator.ValidateAsync(patientCreationForm);
             if (!validationResult.IsValid)
             {
