@@ -21,7 +21,7 @@ namespace MedicalAppts.Infrastructure.Configurations
             services.AddSingleton<IConnectionMultiplexer>(sp =>
                 ConnectionMultiplexer.Connect(config["Reddis:Host"]));
 
-            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<ITokenService, JwtService>();
             services.AddScoped<ICacheService, ReddisCacheService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IDoctorsRepository ,DoctorsRepository>();

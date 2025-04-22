@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalAppts.Infrastructure.Migrations
 {
     [DbContext(typeof(MedicalApptsDbContext))]
-    [Migration("20250422021510_InitialCreate")]
+    [Migration("20250422164639_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -40,14 +40,12 @@ namespace MedicalAppts.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
                     b.Property<string>("ReasonForVisit")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")

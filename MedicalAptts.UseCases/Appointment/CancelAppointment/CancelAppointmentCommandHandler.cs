@@ -8,13 +8,11 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Appointment.CancelAppointment
 {
-    public class CancelAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IDoctorsRepository doctorsRespository, IPatientsRepository patientsRepository,
-        ILogger<CancelAppointmentCommand> logger, IMediator mediator) : IRequestHandler<CancelAppointmentCommand, Result<AppointmentDTO, Error>>
+    public class CancelAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, ILogger<CancelAppointmentCommand> logger,
+        IMediator mediator) : IRequestHandler<CancelAppointmentCommand, Result<AppointmentDTO, Error>>
     {
         private readonly IAppointmentsRepository _appointmentsRepository = appointmentsRepository;
         private readonly ILogger<CancelAppointmentCommand> _logger = logger;
-        private readonly IDoctorsRepository _doctorsRepository = doctorsRespository;
-        private readonly IPatientsRepository _patientsRepository = patientsRepository;
         private readonly IMediator _mediator = mediator;
         public async Task<Result<AppointmentDTO, Error>> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
         {
@@ -24,6 +22,12 @@ namespace MedicalAptts.UseCases.Appointment.CancelAppointment
             {
                 _logger.LogError($"Appointment with id {request.AppointmentId} not found");
                 return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentNotFound);
+            }
+
+            if (appointmentToCancel.PatientId != request.PatientId)
+            {
+                _logger.LogError($"Patient with id {request.PatientId} is not the owner of the appointment with id {request.AppointmentId}");
+                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentNotOwnedByPatient);
             }
 
             appointmentToCancel.Status = MedicalAppts.Core.Enums.AppointmentStatus.CANCELLED;

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MedicalAppts.Infrastructure.Implementations
 {
-    public class JwtService(IConfiguration configuration) : IJwtService
+    public class JwtService(IConfiguration configuration) : ITokenService
     {
         private readonly IConfiguration _configuration = configuration;
 
@@ -15,13 +15,16 @@ namespace MedicalAppts.Infrastructure.Implementations
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:TokenSecretKey"]);
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.UniqueName, userEmail),
+                new Claim(ClaimTypes.Role, role.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(
-                [
-                     new Claim(JwtRegisteredClaimNames.UniqueName, userEmail.ToString()),
-                     new Claim(JwtRegisteredClaimNames.Sub, role.ToString()), 
-                ]),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = _configuration["Jwt:Issuer"],

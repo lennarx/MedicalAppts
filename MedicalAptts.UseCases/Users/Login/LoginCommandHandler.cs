@@ -11,12 +11,12 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Users.Login
 {
-    public class LoginCommandHandler(IUserRepository userRepository, ILogger<LoginCommandHandler> logger, ICacheService cacheService, IMediator mediator, IJwtService jwtService) : IRequestHandler<LoginCommand, Result<string, Error>>
+    public class LoginCommandHandler(IUserRepository userRepository, ILogger<LoginCommandHandler> logger, ICacheService cacheService, IMediator mediator, ITokenService tokenService) : IRequestHandler<LoginCommand, Result<string, Error>>
     {
         private readonly ILogger<LoginCommandHandler> _logger = logger;
         private readonly ICacheService _cacheService = cacheService;
         private readonly IMediator _mediator = mediator;
-        private readonly IJwtService _jwtService = jwtService;
+        private readonly ITokenService _tokenService = tokenService;
         private readonly IUserRepository _userRepository = userRepository;
         public async Task<Result<string, Error>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -57,7 +57,7 @@ namespace MedicalAptts.UseCases.Users.Login
                 }
             }
 
-            return _jwtService.GenerateToken(user.Email, user.UserRole.ToString());
+            return _tokenService.GenerateToken(user.Email, user.UserRole.ToString());
         }
     }
 }

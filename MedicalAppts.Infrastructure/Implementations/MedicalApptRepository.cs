@@ -1,6 +1,7 @@
 ﻿using MedicalAppts.Core.Contracts.Repositories;
 using MedicalAppts.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MedicalAppts.Infrastructure.Implementations
 {
@@ -62,6 +63,13 @@ namespace MedicalAppts.Infrastructure.Implementations
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return _context.Database.CurrentTransaction != null
+                ? _context.Database.CurrentTransaction
+                : await _context.Database.BeginTransactionAsync();
         }
     }
 }
