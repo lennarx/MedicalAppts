@@ -7,7 +7,7 @@ namespace MedicalAptts.UseCases.Appointment.GetAppointmentsPerPatient
     {
         public int PatientId { get; }
         public DateTime? AppointmentDate { get; }
-        public GetAppointmentsPerPatient(DateTime? appointmentDate, int patientId)
+        public GetAppointmentsPerPatient(int patientId, DateTime? appointmentDate)
         {
             AppointmentDate = appointmentDate;
             PatientId = patientId;

@@ -29,12 +29,10 @@ namespace MedicalAptts.UseCases.Appointment.SetAppointment
             try
             {
                 await _appointmentsRepository.AddAsync(apptRequest);
-                var doctorTask = _doctorsRepository.GetByIdAsync(request.DoctorId);
-                var patientTask = _patientRepository.GetByIdAsync(request.PatientId);
+                var doctor = await _doctorsRepository.GetByIdAsync(request.DoctorId);
+                var patient = await _patientRepository.GetByIdAsync(request.PatientId);
 
-                await Task.WhenAll(doctorTask, patientTask);
-
-                await _mediator.Publish(new AppointmentCreatedEvent(doctorTask.Result.Email, patientTask.Result.Name, patientTask.Result.Email, request.AppointmentDate.ToString("dd-mm-YYYY")));               
+                await _mediator.Publish(new AppointmentCreatedEvent(doctor.Email, patient.Name, patient.Email, request.AppointmentDate.ToString("dd-mm-YYYY")));               
             }
             catch (Exception ex)
             {

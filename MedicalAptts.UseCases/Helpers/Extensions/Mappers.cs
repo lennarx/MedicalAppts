@@ -11,6 +11,7 @@ namespace MedicalAptts.UseCases.Helpers.Extensions
         {
             return schedules.Select(x => new DoctorsScheduleDTO
             {
+                DoctorId = x.DoctorId,
                 DayOfWeek = x.DayOfWeek,
                 DoctorName = x.Doctor.Name,
                 StartTime = x.StartTime.Hours * 100 + x.StartTime.Minutes,
@@ -22,6 +23,7 @@ namespace MedicalAptts.UseCases.Helpers.Extensions
         {
             return new DoctorsScheduleDTO
             {
+                DoctorId = schedule.DoctorId,
                 DayOfWeek = schedule.DayOfWeek,
                 DoctorName = schedule.Doctor.Name,
                 StartTime = schedule.StartTime.Hours * 100 + schedule.StartTime.Minutes,
@@ -33,6 +35,7 @@ namespace MedicalAptts.UseCases.Helpers.Extensions
         {
             return doctors.Select(x => new DoctorDTO
             {
+                DoctorId = x.Id,
                 Name = x.Name,
                 Specialty = x.Specialty
             });
@@ -42,6 +45,7 @@ namespace MedicalAptts.UseCases.Helpers.Extensions
         {
             return new DoctorDTO
             {
+                DoctorId = doctor.Id,
                 Name = doctor.Name,
                 Specialty = doctor.Specialty
             };
@@ -51,6 +55,7 @@ namespace MedicalAptts.UseCases.Helpers.Extensions
         {
             return new AppointmentDTO
             {
+                AppointmentId = appointment.Id,
                 Patient = appointment.Patient.Name,
                 Doctor = appointment.Doctor.Name,
                 AppointmentDate = appointment.AppointmentDate,
@@ -62,6 +67,7 @@ namespace MedicalAptts.UseCases.Helpers.Extensions
         {
             return appointments.Select(x => new AppointmentDTO
             {
+                AppointmentId = x.Id,
                 Patient = x.Patient.Name,
                 Doctor = x.Doctor.Name,
                 AppointmentDate = x.AppointmentDate,

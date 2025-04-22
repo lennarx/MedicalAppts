@@ -9,12 +9,12 @@ namespace MedicalAptts.UseCases.Doctor.SetDoctorSchedule
         public DayOfWeek DayOfWeek { get; }
         public TimeSpan StartTime { get; }
         public TimeSpan EndTime { get; }
-        public SetDoctorScheduleCommand(int doctorId, DayOfWeek dayOfWeek, TimeSpan startTime, TimeSpan endTime)
+        public SetDoctorScheduleCommand(int doctorId, CreateDoctorScheduleForm createDoctorScheduleForm)
         {
             DoctorId = doctorId;
-            DayOfWeek = dayOfWeek;
-            StartTime = startTime;
-            EndTime = endTime;
+            DayOfWeek = createDoctorScheduleForm.DayOfWeek;
+            StartTime = createDoctorScheduleForm.StartTime;
+            EndTime = createDoctorScheduleForm.EndTime;
         }
     }
 }

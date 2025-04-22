@@ -12,8 +12,8 @@ namespace MedicalAptts.UseCases.Patient.CreatePatient
     public class CreatePatientCommandHandler(IPatientsRepository patientsRepository, ILogger<CreatePatientCommandHandler> logger, IMediator mediator) : IRequestHandler<CreatePatientCommand, Result<PatientDTO, Error>>
     {
         private readonly IPatientsRepository _patientsRepository = patientsRepository;
-        private readonly ILogger<CreatePatientCommandHandler> _logger;
-        private readonly IMediator _mediator;
+        private readonly ILogger<CreatePatientCommandHandler> _logger = logger;
+        private readonly IMediator _mediator = mediator;
         public async Task<Result<PatientDTO, Error>> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
         {
             var hasher = new PasswordHasher();

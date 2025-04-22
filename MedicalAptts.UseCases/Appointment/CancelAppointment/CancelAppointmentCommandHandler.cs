@@ -37,6 +37,7 @@ namespace MedicalAptts.UseCases.Appointment.CancelAppointment
             catch (Exception ex)
             {
                 _logger.LogError($"Appointment with id {request.AppointmentId} could not be cancelled");
+                _logger.LogError($"{ex}");
                 return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentCancellationError);
             }
 
