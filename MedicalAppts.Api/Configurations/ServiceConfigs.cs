@@ -1,4 +1,5 @@
 ﻿using MedicalAppts.Infrastructure.Configurations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAppts.Api.Configurations
 {
@@ -9,7 +10,12 @@ namespace MedicalAppts.Api.Configurations
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddAuthentication();
-            services.AddApiVersioning();
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true;
+            });
             services.AddAuthenticationConfigs(builder.Configuration);
             services.AddInfrastructureServices(builder.Configuration);
             services.AddMediatrConfigs();
