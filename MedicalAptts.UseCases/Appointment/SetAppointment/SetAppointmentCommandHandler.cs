@@ -8,16 +8,27 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Appointment.SetAppointment
 {
-    public class SetAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IPatientsRepository patientsRepository, IDoctorsRepository doctorsRepository,
+    public class SetAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IPatientsRepository patientsRepository, IDoctorsRepository doctorsRepository, IDoctorsScheduleRepository doctorsScheduleRepository,
         ILogger<SetAppointmentCommandHandler> logger, IMediator mediator) : IRequestHandler<SetAppointmentCommand, Result<AppointmentDTO, Error>>
     {
         private readonly IAppointmentsRepository _appointmentsRepository = appointmentsRepository;
         private readonly IPatientsRepository _patientRepository = patientsRepository;
         private readonly IDoctorsRepository _doctorsRepository = doctorsRepository;
+        private readonly IDoctorsScheduleRepository _doctorsScheduleRepository = doctorsScheduleRepository;
         private readonly ILogger<SetAppointmentCommandHandler> _logger = logger;
         private readonly IMediator _mediator = mediator;
         public async Task<Result<AppointmentDTO, Error>> Handle(SetAppointmentCommand request, CancellationToken cancellationToken)
         {
+            if ((await _appointmentsRepository.GetAppointmentsByDateAndDoctorIdAsync(request.AppointmentDate, request.DoctorId)).Any())
+            {
+                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentAlreadyExists);
+            }
+
+            if (!AppointmentIsInDoctorTimeFrame(request.AppointmentDate, request.DoctorId))
+            {
+                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentOutOfTimeFrame);
+            }
+
             var apptRequest = new MedicalAppts.Core.Entities.Appointment
             {
                 PatientId = request.PatientId,
@@ -32,7 +43,7 @@ namespace MedicalAptts.UseCases.Appointment.SetAppointment
                 var doctor = await _doctorsRepository.GetByIdAsync(request.DoctorId);
                 var patient = await _patientRepository.GetByIdAsync(request.PatientId);
 
-                await _mediator.Publish(new AppointmentCreatedEvent(doctor.Email, patient.Name, patient.Email, request.AppointmentDate.ToString("dd-mm-YYYY")));               
+                await _mediator.Publish(new AppointmentCreatedEvent(doctor.Name, patient.Name, patient.Email, request.AppointmentDate.ToString("dd-mm-YYYY")));
             }
             catch (Exception ex)
             {
@@ -42,6 +53,19 @@ namespace MedicalAptts.UseCases.Appointment.SetAppointment
 
             _logger.LogInformation($"Appointment scheduled for patient {request.PatientId} with doctor {request.DoctorId} on {request.AppointmentDate}");
             return Result<AppointmentDTO, Error>.Success(apptRequest.MapToAppointmentDTO());
+        }
+
+        private bool AppointmentIsInDoctorTimeFrame(DateTime appointmentDate, int doctorId)
+        {
+            var doctorSchedule = _doctorsScheduleRepository.GetFiltered(x => x.DoctorId == doctorId && x.DayOfWeek == appointmentDate.DayOfWeek).FirstOrDefault();
+            if (doctorSchedule == null)
+            {
+                return false;
+            }
+            var startTime = new TimeSpan(doctorSchedule.StartTime.Hours, doctorSchedule.StartTime.Minutes, 0);
+            var endTime = new TimeSpan(doctorSchedule.EndTime.Hours, doctorSchedule.EndTime.Minutes, 0);
+            var appointmentTime = new TimeSpan(appointmentDate.Hour, appointmentDate.Minute, 0);
+            return appointmentTime >= startTime && appointmentTime <= endTime;
         }
     }
 }
