@@ -2,7 +2,7 @@
 
 namespace MedicalAppts.Core.Contracts.Repositories
 {
-    public interface IPatientsRepository : IMedicalApptRepository<Patient>, IUserRepository
+    public interface IPatientsRepository : IMedicalApptRepository<Patient>
     { 
         
     }

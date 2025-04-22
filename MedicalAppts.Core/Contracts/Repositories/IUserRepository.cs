@@ -2,9 +2,7 @@
 
 namespace MedicalAppts.Core.Contracts.Repositories
 {
-    public interface IUserRepository
+    public interface IUserRepository : IMedicalApptRepository<User>
     {
-        Task<BaseUser?> GetUserByIdAsync(int id);
-        Task UpdateUserAsync(BaseUser user);
     }
 }
