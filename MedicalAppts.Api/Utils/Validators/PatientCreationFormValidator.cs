@@ -3,9 +3,9 @@ using MedicalAptts.UseCases.Patient;
 
 namespace MedicalAppts.Api.Utils.Validators
 {
-    public class PatientCreatiionFormValidator : AbstractValidator<PatientCreationForm>
+    public class PatientCreationFormValidator : AbstractValidator<PatientCreationForm>
     {
-        public PatientCreatiionFormValidator()
+        public PatientCreationFormValidator()
         {
             RuleFor(form => form.Email)
              .NotEmpty()
