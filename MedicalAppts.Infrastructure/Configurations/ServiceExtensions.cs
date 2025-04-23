@@ -23,6 +23,7 @@ namespace MedicalAppts.Infrastructure.Configurations
 
             services.AddScoped<ITokenService, JwtService>();
             services.AddScoped<ICacheService, ReddisCacheService>();
+            services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IDoctorsRepository ,DoctorsRepository>();
             services.AddScoped<IPatientsRepository, PatientsRepository>();
