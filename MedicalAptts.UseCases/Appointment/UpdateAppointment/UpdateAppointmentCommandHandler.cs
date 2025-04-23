@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MedicalAppts.Core;
+using MedicalAppts.Core.Contracts;
 using MedicalAppts.Core.Contracts.Repositories;
 using MedicalAppts.Core.Errors;
 using MedicalAptts.UseCases.Appointment.SetAppointment;
@@ -7,12 +8,13 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Appointment.UpdateAppointment
 {
-    public class UpdateAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IMediator mediator, ILogger<UpdateAppointmentCommandHandler> logger)
+    public class UpdateAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IMediator mediator, ILogger<UpdateAppointmentCommandHandler> logger, ICacheService cacheService)
         : IRequestHandler<UpdateAppointmentCommand, Result<AppointmentDTO, Error>>
     {
         private readonly IAppointmentsRepository _appointmentsRepository = appointmentsRepository;
         private readonly ILogger<UpdateAppointmentCommandHandler> _logger = logger;
         private readonly IMediator _mediator = mediator;
+        private readonly ICacheService _cacheService = cacheService;
         public async Task<Result<AppointmentDTO, Error>> Handle(UpdateAppointmentCommand request, CancellationToken cancellationToken)
         {
             var appointmentToUpdate = await _appointmentsRepository.GetByIdAsync(request.AppointmentId);
@@ -31,6 +33,7 @@ namespace MedicalAptts.UseCases.Appointment.UpdateAppointment
 
             using var transaction = await _appointmentsRepository.BeginTransactionAsync();
 
+
             try
             {
                 await _appointmentsRepository.DeleteAsync(appointmentToUpdate.Id);
@@ -41,6 +44,7 @@ namespace MedicalAptts.UseCases.Appointment.UpdateAppointment
                     await transaction.RollbackAsync();
                 else
                     await transaction.CommitAsync();
+                    await RemoveCacheIfExistsAsync(doctorId, appointmentToUpdate.AppointmentDate);
 
                 return result;
             }
@@ -51,6 +55,12 @@ namespace MedicalAptts.UseCases.Appointment.UpdateAppointment
                 return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentUpdateError);
             }
 
+        }
+
+        private async Task RemoveCacheIfExistsAsync(int doctorId, DateTime appointmentDate)
+        {
+            var cacheKey = $"DoctorAvailability:{doctorId}:{appointmentDate:yyyyMMdd}";
+            await _cacheService.RemoveAsync(cacheKey);
         }
     }
 }

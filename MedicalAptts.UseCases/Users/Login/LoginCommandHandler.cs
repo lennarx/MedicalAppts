@@ -39,12 +39,12 @@ namespace MedicalAptts.UseCases.Users.Login
             if (loginResult != PasswordVerificationResult.Success)
             {
                 var cachekey = $"cacheEntry_{"Login"}_{user.Email}_{user.Id}";
-                int tries = Convert.ToInt32(await _cacheService.GetAsync(cachekey)) + 1;
-                _cacheService.SetAsync(cachekey, tries.ToString());
+                int tries = Convert.ToInt32(await _cacheService.GetAsync<int>(cachekey)) + 1;
+                await _cacheService.SetAsync(cachekey, tries.ToString());
 
                 if (tries >= 3)
                 {
-                    await _mediator.Publish(new UserBlockedEvent(user.Id, user.Email), cancellationToken);
+                    await _mediator.Publish(new UserBlockedEvent(user.Email), cancellationToken);
                     _logger.LogError($"Too many login attempts, user: {user.Email} is blocked");
                     user.UserStatus = UserStatus.BLOCKED;
                     await _userRepository.UpdateAsync(user);
