@@ -1,14 +1,16 @@
 ﻿using MedicalAppts.Core.Contracts;
 using StackExchange.Redis;
+using System.Text.Json;
 
 namespace MedicalAppts.Infrastructure.Implementations
 {
     public class ReddisCacheService(IConnectionMultiplexer connection) : ICacheService
     {
         private readonly IDatabase _db = connection.GetDatabase();
-        public async Task<string?> GetAsync(string key)
+        public async Task<T> GetAsync<T>(string key)
         {
-            return await _db.StringGetAsync(key);
+            var cacheResult = await _db.StringGetAsync(key);
+            return cacheResult.HasValue ? JsonSerializer.Deserialize<T>(cacheResult!) : default;
         }
 
         public async Task RemoveAsync(string key)
