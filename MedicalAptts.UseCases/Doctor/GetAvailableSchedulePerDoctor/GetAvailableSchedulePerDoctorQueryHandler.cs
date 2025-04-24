@@ -2,6 +2,7 @@
 using MedicalAppts.Core;
 using MedicalAppts.Core.Contracts;
 using MedicalAppts.Core.Contracts.Repositories;
+using MedicalAppts.Core.Errors;
 using MedicalAptts.UseCases.Appointment;
 using MedicalAptts.UseCases.Appointment.GetAppointmentsPerDoctor;
 using MedicalAptts.UseCases.Doctor.GetDoctorSchedule;
@@ -31,6 +32,16 @@ namespace MedicalAptts.UseCases.Doctor.GetAvailableSchedulePerDoctor
 
             var doctorSchedules = doctorScheduleResultTask.Result.Value;
             var doctorAppointments = doctorsAppointmentResultTask.Result.Value;
+
+            if (doctorSchedules == null || !doctorSchedules.Any())
+            {
+                return Result<IEnumerable<DoctorsAvailableTimeFrameDTO>, Error>.Failure(GenericErrors.ScheduleNotSet);
+            }
+
+            if (doctorAppointments == null || !doctorAppointments.Any())
+            {
+                return Result<IEnumerable<DoctorsAvailableTimeFrameDTO>, Error>.Failure(GenericErrors.AppointmentNotFound);
+            }
 
             var freeSchedules = doctorSchedules.SelectMany(schedule => FilterIfApptIsAlreadyBooked(schedule, doctorAppointments));
 

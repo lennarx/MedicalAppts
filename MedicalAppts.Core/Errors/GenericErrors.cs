@@ -11,6 +11,7 @@
         public static readonly Error AppointmentNotOwnedByPatient = new Error(400, "The patient is not the owner of the appointment");
         public static readonly Error AppointmentOutOfTimeFrame = new Error(400, "Appointment is not within the doctor attention time frame");
         public static readonly Error DoctorCreationError = new Error(400, "An error occurred while attempting to create the doctor");
+        public static readonly Error ScheduleNotSet = new Error(404, "Doctor schedules or appointments not found");
         public static readonly Error PatientCreationError = new Error(400, "An error occurred while attempting to create the patient");
     }
 }
