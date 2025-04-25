@@ -37,5 +37,6 @@ using (var scope = app.Services.CreateScope())
 app.MapControllers();
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.Run();
