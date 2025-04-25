@@ -18,7 +18,17 @@ namespace MedicalAppts.Api.Configurations
             {
                 options.SwaggerDoc("v1", info);
 
-                var securityScheme = new OpenApiSecurityScheme
+                var apiKeySecurityScheme = new OpenApiSecurityScheme
+                {
+                    Description = "API Key needed to access the endpoints. Example: 'AUTH-API-KEY: {your-key}'",
+                    In = ParameterLocation.Header,
+                    Name = "AUTH-API-KEY",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "ApiKeyScheme",
+                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "ApiKey" }
+                };
+
+                var jwtSecurityScheme = new OpenApiSecurityScheme
                 {
                     Name = "JWT Authentication",
                     Description = "Enter JWT token **_only_**",
@@ -33,10 +43,24 @@ namespace MedicalAppts.Api.Configurations
                     }
                 };
                 options.EnableAnnotations();
-                options.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+                options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+                options.AddSecurityDefinition(apiKeySecurityScheme.Reference.Id, apiKeySecurityScheme);
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
                     {
-                        { securityScheme, Array.Empty<string>() }
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                            },
+                            new List<string>()
+                        },
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "ApiKey" }
+                            },
+                            new List<string>()
+                        }
                     });
             });
             return services;

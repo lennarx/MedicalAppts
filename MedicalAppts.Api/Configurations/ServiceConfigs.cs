@@ -9,7 +9,6 @@ namespace MedicalAppts.Api.Configurations
         {
             services.AddControllers();
             services.AddEndpointsApiExplorer();
-            services.AddAuthentication();
             services.AddApiVersioning(options =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = true;
