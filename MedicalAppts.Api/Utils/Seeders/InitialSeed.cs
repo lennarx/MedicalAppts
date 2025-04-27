@@ -9,7 +9,7 @@ namespace MedicalAppts.Api.Utils.Seeders
     {
         public static async Task SeedAsync(MedicalApptsDbContext context)
         {
-            if (!context.Patients.Any())
+            if (!context.Users.Any())
             {
                 var hasher = new PasswordHasher();
                 var admin = new User
