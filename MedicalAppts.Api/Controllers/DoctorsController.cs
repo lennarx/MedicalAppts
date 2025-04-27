@@ -140,7 +140,7 @@ namespace MedicalAppts.Api.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [Authorize(Roles = $"{nameof(UserRole.ADMIN)}")]
-        public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorForm createDoctorForm)
+        public async Task<IActionResult> CreateDoctor([FromBody] DoctorCreationForm createDoctorForm)
         {
             var command = new CreateDoctorCommand(createDoctorForm);
             var result = (await _mediator.Send(command))
