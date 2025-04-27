@@ -1,8 +1,7 @@
 ﻿# 🩺 Medical Appointments API (MVP)
 
-This API serves as a **Minimum Viable Product** for a medical appointments system used by clinics or medical centers to manage appointments and doctors' availability.
-
-While email notifications to patients and doctors are planned, **this feature is not yet implemented**.
+This API is a Minimum Viable Product designed to manage medical appointments efficiently.
+It allows patients to schedule appointments, doctors to create and manage their availability, and administrators to perform privileged actions for system management and oversight.
 
 ---
 
