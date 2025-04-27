@@ -24,7 +24,8 @@ namespace MedicalAppts.Infrastructure.Implementations
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsByDateAsync(DateTime date)
         {
-            return await _dbSet
+            return await _dbSet.Include(x => x.Patient)
+                .Include(x => x.Doctor)
                 .Where(x => x.AppointmentDate.Date == date.Date)
                 .AsNoTracking()
                 .ToListAsync();
