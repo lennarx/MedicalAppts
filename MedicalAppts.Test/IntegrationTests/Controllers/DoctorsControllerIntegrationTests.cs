@@ -88,7 +88,7 @@ public class DoctorsControllerIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task CreateDoctor_ShouldReturnCreated_WhenDataIsValid()
     {
-        var createDoctorForm = new CreateDoctorForm
+        var createDoctorForm = new DoctorCreationForm
         {
             Name = "Dr. House",
             Email = "dr.house@example.com",
