@@ -27,15 +27,13 @@ namespace MedicalAppts.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        [Route("{patientId}/appointments")]
+        [HttpGet("{patientId}/appointments")]
         [Produces("application/json")]
         [SwaggerOperation(
            Summary = "Retrieves patients appointments",
            Description = "This endpoint is used to retrieve appointments based on a patientId. Appointment date is optional"
        )]
         [ProducesResponseType(typeof(IEnumerable<AppointmentDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.PATIENT)}")]
@@ -45,16 +43,8 @@ namespace MedicalAppts.Api.Controllers
             var result = (await _mediator.Send(command))
                 .Match(resultValue => Result<IEnumerable<AppointmentDTO>, Error>.Success(resultValue), error => error);
 
-            if (result.Error != null)
-            {
-                _logger.LogError(result.Error.Message);
-                return Problem(result.Error.Message, null, result.Error.HttpStatusCode);
-            }
-            else
-            {
-                _logger.LogInformation("Appointments per patient retrieved successfully.");
-                return Ok(result?.Value);
-            }
+            _logger.LogInformation("Appointments per patient retrieved successfully.");
+            return Ok(result?.Value);
         }
 
         [HttpPost]
@@ -67,8 +57,6 @@ namespace MedicalAppts.Api.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = $"{nameof(UserRole.ADMIN)}")]
         public async Task<IActionResult> CreatePatient([FromBody] PatientCreationForm patientCreationForm)
         {
@@ -84,20 +72,12 @@ namespace MedicalAppts.Api.Controllers
             var result = (await _mediator.Send(command))
                 .Match(resultValue => resultValue, error => error);
 
-            if (result.Error != null)
-            {
-                _logger.LogError(result.Error.Message);
-                return Problem(result.Error.Message, null, result.Error.HttpStatusCode);
-            }
-            else
-            {
-                _logger.LogInformation("Patient created successfully.");
-                return CreatedAtAction(nameof(CreatePatient), new { id = result?.Value?.PatientId }, result?.Value);
-            }
+            _logger.LogInformation("Patient created successfully.");
+            return CreatedAtAction(nameof(CreatePatient), new { id = result?.Value?.PatientId }, result?.Value);
+
         }
 
-        [HttpPatch]
-        [Route("{patientId}/appointment/{appointmentId}")]
+        [HttpPatch("{patientId}/appointments/{appointmentId}")]
         [Produces("application/json")]
         [SwaggerOperation(
             Summary = "Updates an appointment",
@@ -118,7 +98,7 @@ namespace MedicalAppts.Api.Controllers
                 result = (await _mediator.Send(command))
                     .Match(resultValue => resultValue, error => error);
             }
-            else 
+            else
             {
                 var command = new CancelAppointmentCommand(appointmentId, patientId);
                 result = (await _mediator.Send(command))

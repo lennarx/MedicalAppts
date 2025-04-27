@@ -27,15 +27,13 @@ namespace MedicalAppts.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        [Route("{appointmentsDate}")]
+        [HttpGet("{appointmentsDate}")]
         [Produces("application/json")]
         [SwaggerOperation(
             Summary = "Retrieves appointments",
             Description = "This endpoint is used to retrieve all the appointments based on a specific date"
         )]
         [ProducesResponseType(typeof(IEnumerable<AppointmentDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [Authorize(Roles = $"{nameof(UserRole.ADMIN)}")]
@@ -45,16 +43,8 @@ namespace MedicalAppts.Api.Controllers
             var result = (await _mediator.Send(query))
                 .Match(resultValue => Result<IEnumerable<AppointmentDTO>, Error>.Success(resultValue), error => error);
 
-            if (result.Error != null)
-            {
-                _logger.LogError(result.Error.Message);
-                return Problem(result.Error.Message, null, result.Error.HttpStatusCode);
-            }
-            else
-            {
-                _logger.LogInformation("Appointments per date retrieved successfully.");
-                return Ok(result?.Value);
-            }
+            _logger.LogInformation("Appointments per date retrieved successfully.");
+            return Ok(result?.Value);
         }
 
         [HttpPost]
@@ -71,7 +61,7 @@ namespace MedicalAppts.Api.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = $"{nameof(UserRole.ADMIN)},{nameof(UserRole.PATIENT)}")]
         public async Task<IActionResult> CreateAppointment([FromBody] AppointmentCreationForm appointmentCreationForm)
-        {            
+        {
             var command = new SetAppointmentCommand(appointmentCreationForm.PatientId, appointmentCreationForm.DoctorId, appointmentCreationForm.AppointmentDate);
             var result = (await _mediator.Send(command))
                 .Match(resultValue => resultValue, error => error);
