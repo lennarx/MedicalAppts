@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace MedicalAptts.UseCases.Doctor
 {
-    public class CreateDoctorForm
+    public class DoctorCreationForm
     {
         public string Email { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
