@@ -65,7 +65,7 @@ namespace MedicalAppts.Infrastructure.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        public async virtual Task<IDbContextTransaction> BeginTransactionAsync()
         {
             return _context.Database.CurrentTransaction != null
                 ? _context.Database.CurrentTransaction
