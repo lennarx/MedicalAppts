@@ -38,9 +38,6 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request"
-          },
           "401": {
             "description": "Unauthorized"
           },
@@ -105,6 +102,49 @@
         }
       }
     },
+    "/api/Doctors/{specialty}": {
+      "get": {
+        "tags": [
+          "Doctors"
+        ],
+        "summary": "Retrieves doctors per speciality",
+        "description": "This endpoint is used to retrieve doctors per speciality",
+        "parameters": [
+          {
+            "name": "specialty",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DoctorDTO"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/Doctors/{doctorId}/appointments": {
       "get": {
         "tags": [
@@ -144,9 +184,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -197,11 +234,11 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request"
-          },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -245,9 +282,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -307,59 +341,8 @@
           "401": {
             "description": "Unauthorized"
           },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/speciality/{speciality}": {
-      "get": {
-        "tags": [
-          "Doctors"
-        ],
-        "summary": "Retrieves doctors per speciality",
-        "description": "This endpoint is used to retrieve doctors per speciality",
-        "parameters": [
-          {
-            "name": "specialty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/MedicalSpecialty"
-            }
-          },
-          {
-            "name": "speciality",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DoctorDTO"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -375,17 +358,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateDoctorForm"
+                "$ref": "#/components/schemas/DoctorCreationForm"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateDoctorForm"
+                "$ref": "#/components/schemas/DoctorCreationForm"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateDoctorForm"
+                "$ref": "#/components/schemas/DoctorCreationForm"
               }
             }
           }
@@ -407,11 +390,8 @@
           "401": {
             "description": "Unauthorized"
           },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -506,9 +486,6 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request"
-          },
           "401": {
             "description": "Unauthorized"
           },
@@ -563,17 +540,11 @@
           },
           "403": {
             "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
     },
-    "/api/Patients/{patientId}/appointment/{appointmentId}": {
+    "/api/Patients/{patientId}/appointments/{appointmentId}": {
       "patch": {
         "tags": [
           "Patients"
@@ -643,11 +614,10 @@
     "schemas": {
       "AppointmentActionsEnum": {
         "enum": [
-          0,
-          1
+          "cancel",
+          "reschedule"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "string"
       },
       "AppointmentCreationForm": {
         "type": "object",
@@ -698,34 +668,12 @@
       },
       "AppointmentStatus": {
         "enum": [
-          0,
-          1,
-          2,
-          3
+          "scheduled",
+          "completed",
+          "cancelled",
+          "nO_SHOW"
         ],
-        "type": "integer",
-        "format": "int32"
-      },
-      "CreateDoctorForm": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "specialty": {
-            "$ref": "#/components/schemas/MedicalSpecialty"
-          },
-          "password": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
+        "type": "string"
       },
       "CreateDoctorScheduleForm": {
         "type": "object",
@@ -746,16 +694,36 @@
       },
       "DayOfWeek": {
         "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
+          "sunday",
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday",
+          "saturday"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "string"
+      },
+      "DoctorCreationForm": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "specialty": {
+            "$ref": "#/components/schemas/MedicalSpecialty"
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "DoctorDTO": {
         "type": "object",
@@ -841,17 +809,16 @@
       },
       "MedicalSpecialty": {
         "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
+          "cardiologist",
+          "clinical",
+          "gastroenterologist",
+          "neurologist",
+          "dermatologist",
+          "orthopedic",
+          "pediatrician",
+          "psychiatrist"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "string"
       },
       "PatientCreationForm": {
         "type": "object",
@@ -937,8 +904,8 @@
   },
   "security": [
     {
-      "Bearer": [],
-      "ApiKey": []
+      "Bearer": [ ],
+      "ApiKey": [ ]
     }
   ]
 }
