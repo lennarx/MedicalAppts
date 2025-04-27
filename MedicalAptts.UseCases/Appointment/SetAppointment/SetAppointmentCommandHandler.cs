@@ -19,7 +19,7 @@ namespace MedicalAptts.UseCases.Appointment.SetAppointment
         private readonly IMediator _mediator = mediator;
         public async Task<Result<AppointmentDTO, Error>> Handle(SetAppointmentCommand request, CancellationToken cancellationToken)
         {
-            if ((await _appointmentsRepository.GetAppointmentsByDateAndDoctorIdAsync(request.AppointmentDate, request.DoctorId)).Any())
+            if (await AppointmentAlreadyExists(request.AppointmentDate, request.DoctorId))
             {
                 return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentAlreadyExists);
             }
@@ -66,6 +66,16 @@ namespace MedicalAptts.UseCases.Appointment.SetAppointment
             var endTime = new TimeSpan(doctorSchedule.EndTime.Hours, doctorSchedule.EndTime.Minutes, 0);
             var appointmentTime = new TimeSpan(appointmentDate.Hour, appointmentDate.Minute, 0);
             return appointmentTime >= startTime && appointmentTime <= endTime;
+        }
+
+        private async Task<bool> AppointmentAlreadyExists(DateTime apptDate, int doctorId)
+        {
+            var appt = (await _appointmentsRepository.GetAppointmentsByDateAndDoctorIdAsync(apptDate, doctorId)).FirstOrDefault();
+            if (appt != null)
+            {
+                return appt.AppointmentDate.Hour == apptDate.Hour;
+            }
+            return false;
         }
     }
 }
