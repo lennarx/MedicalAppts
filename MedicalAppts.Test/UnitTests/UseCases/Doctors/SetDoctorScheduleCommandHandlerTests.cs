@@ -3,7 +3,7 @@ using MedicalAppts.Core.Entities;
 using MedicalAptts.UseCases.Doctor.SetDoctorSchedule;
 using Moq;
 
-namespace MedicalAppts.Test.Doctor
+namespace MedicalAppts.Test.UnitTests.UseCases.Doctors
 {
     public class SetDoctorScheduleCommandHandlerTests
     {
@@ -20,7 +20,7 @@ namespace MedicalAppts.Test.Doctor
         {
             var doctorId = 1;
             var command = new SetDoctorScheduleCommand(doctorId, new MedicalAptts.UseCases.Doctor.CreateDoctorScheduleForm
-            {                
+            {
                 DayOfWeek = DayOfWeek.Monday,
                 StartTime = new TimeSpan(9, 30, 0),
                 EndTime = new TimeSpan(17, 0, 0)
@@ -53,7 +53,7 @@ namespace MedicalAppts.Test.Doctor
             _scheduleRepoMock
                 .Setup(r => r.AddAsync(It.IsAny<DoctorSchedule>()))
                 .ThrowsAsync(new Exception("Database error"));
-            
+
             await Assert.ThrowsAsync<Exception>(() => _handler.Handle(command, CancellationToken.None));
         }
     }

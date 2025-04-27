@@ -4,7 +4,7 @@ using MedicalAppts.Core.Enums;
 using MedicalAptts.UseCases.Appointment.GetAppointmentsPerPatient;
 using Moq;
 
-namespace MedicalAppts.Test.Appointment
+namespace MedicalAppts.Test.UnitTests.UseCases.Appointments
 {
     public class GetAppointmentsPerPatientQueryHandlerTests
     {
@@ -51,7 +51,7 @@ namespace MedicalAppts.Test.Appointment
 
         [Fact]
         public async Task Handle_ReturnsEmptyList_WhenNoAppointmentsFound()
-        {            
+        {
             var date = new DateTime(2025, 4, 24);
             var patientId = 123;
             var query = new GetAppointmentsPerPatient(patientId, date);

@@ -11,7 +11,7 @@ using MedicalAptts.UseCases.Appointment;
 using Microsoft.EntityFrameworkCore.Storage;
 using MedicalAppts.Core.Errors;
 
-namespace MedicalAppts.Test.Appointment
+namespace MedicalAppts.Test.UnitTests.UseCases.Appointments
 {
     public class UpdateAppointmentCommandHandlerTests
     {

@@ -4,7 +4,7 @@ using MedicalAppts.Core.Enums;
 using MedicalAptts.UseCases.Appointment.GetAppointmentsPerDoctor;
 using Moq;
 
-namespace MedicalAppts.Test.Appointment
+namespace MedicalAppts.Test.UnitTests.UseCases.Appointments
 {
     public class GetAppointmentsPerDoctorQueryHandlerTests
     {

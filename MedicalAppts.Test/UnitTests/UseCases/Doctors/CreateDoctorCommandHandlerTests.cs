@@ -9,7 +9,7 @@ using MedicalAptts.UseCases.Doctor.CreateDoctor;
 using MedicalAptts.UseCases.Doctor;
 using MedicalAppts.Core.Enums;
 
-namespace MedicalAppts.Test.Users
+namespace MedicalAppts.Test.UnitTests.UseCases.Doctors
 {
     public class CreateDoctorCommandHandlerTests
     {
@@ -30,7 +30,7 @@ namespace MedicalAppts.Test.Users
         public async Task Handle_ReturnsSuccess_WhenDoctorIsCreated()
         {
             var command = new CreateDoctorCommand(
-                new CreateDoctorForm
+                new DoctorCreationForm
                 {
                     Name = "Dr. Smith",
                     Specialty = MedicalSpecialty.CARDIOLOGIST,
@@ -52,7 +52,7 @@ namespace MedicalAppts.Test.Users
         public async Task Handle_ReturnsFailure_WhenExceptionIsThrown()
         {
             var command = new CreateDoctorCommand(
-                new CreateDoctorForm
+                new DoctorCreationForm
                 {
                     Name = "Dr. Smith",
                     Specialty = MedicalSpecialty.CARDIOLOGIST,

@@ -4,7 +4,7 @@ using MedicalAppts.Core.Enums;
 using MedicalAptts.UseCases.Appointment.GetAppointmentsPerDate;
 using Moq;
 
-namespace MedicalAppts.Test.Appointment
+namespace MedicalAppts.Test.UnitTests.UseCases.Appointments
 {
     public class GetAppointmentsPerDateQueryHandlerTests
     {
@@ -47,7 +47,7 @@ namespace MedicalAppts.Test.Appointment
             _appointmentRepositoryMock
                 .Setup(r => r.GetAppointmentsByDateAsync(date))
                 .ReturnsAsync(appointments);
-            
+
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert

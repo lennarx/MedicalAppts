@@ -3,7 +3,7 @@ using MedicalAppts.Core.Entities;
 using MedicalAptts.UseCases.Doctor.GetDoctorSchedule;
 using Moq;
 
-namespace MedicalAppts.Test.Doctor
+namespace MedicalAppts.Test.UnitTests.UseCases.Doctors
 {
     public class GetDoctorsScheduleQueryHandlerTests
     {

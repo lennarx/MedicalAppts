@@ -9,7 +9,7 @@ using MedicalAptts.UseCases.Doctor.GetAvailableSchedulePerDoctor;
 using MedicalAptts.UseCases.Doctor.GetDoctorSchedule;
 using MedicalAptts.UseCases.Doctor;
 
-namespace MedicalAppts.Test.Appointment
+namespace MedicalAppts.Test.UnitTests.UseCases.Doctors
 {
     public class GetAvailableSchedulePerDoctorQueryHandlerTests
     {

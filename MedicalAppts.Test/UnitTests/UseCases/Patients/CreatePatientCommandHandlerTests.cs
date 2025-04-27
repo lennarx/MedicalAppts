@@ -7,7 +7,7 @@ using MedicalAptts.UseCases.Patient.CreatePatient;
 using MedicalAptts.UseCases.Patient;
 using Microsoft.Extensions.Logging;
 
-namespace MedicalAppts.Test.Patient
+namespace MedicalAppts.Test.UnitTests.UseCases.Patients
 {
     public class CreatePatientCommandHandlerTests
     {

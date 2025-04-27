@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 using MedicalAppts.Core.Events;
 
-namespace MedicalAppts.Test.Appointment
+namespace MedicalAppts.Test.UnitTests.UseCases.Appointments
 {
     public class SetAppointmentCommandHandlerTests
     {

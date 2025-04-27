@@ -4,7 +4,7 @@ using MedicalAppts.Core.Errors;
 using MedicalAptts.UseCases.Doctor.GetDoctorBySpecialty;
 using Moq;
 
-namespace MedicalAppts.Test.Doctor
+namespace MedicalAppts.Test.UnitTests.UseCases.Doctors
 {
     public class GetDoctorsBySpecialtyQueryHandlerTests
     {
@@ -22,7 +22,7 @@ namespace MedicalAppts.Test.Doctor
             var specialty = MedicalSpecialty.CARDIOLOGIST;
             var query = new GetDoctorsBySpecialtyQuery(specialty);
 
-            var doctors = new List<MedicalAppts.Core.Entities.Doctor>
+            var doctors = new List<Core.Entities.Doctor>
             {
                 new() { Id = 1, Name = "Dr. Heart", Specialty = MedicalSpecialty.CARDIOLOGIST, Email = "doc1@clinic.com", UserRole = UserRole.DOCTOR, UserStatus = UserStatus.ACTIVE }
             };
@@ -46,7 +46,7 @@ namespace MedicalAppts.Test.Doctor
 
             _doctorsRepositoryMock
                 .Setup(r => r.GetDoctorsBySpecialtyAsync(specialty))
-                .ReturnsAsync(new List<MedicalAppts.Core.Entities.Doctor>());
+                .ReturnsAsync(new List<Core.Entities.Doctor>());
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
