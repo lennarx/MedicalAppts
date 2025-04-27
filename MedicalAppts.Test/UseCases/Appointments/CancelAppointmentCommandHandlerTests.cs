@@ -5,6 +5,7 @@ using MedicalAppts.Core.Contracts.Repositories;
 using MedicalAppts.Core.Entities;
 using MedicalAppts.Core.Errors;
 using MedicalAppts.Core.Events;
+using MedicalAptts.UseCases.Appointment;
 using MedicalAptts.UseCases.Appointment.CancelAppointment;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -12,7 +13,7 @@ using Moq;
 public class CancelAppointmentCommandHandlerTests
 {
     private readonly Mock<IAppointmentsRepository> _appointmentsRepoMock = new();
-    private readonly Mock<ILogger<CancelAppointmentCommand>> _loggerMock = new();
+    private readonly Mock<ILogger<UpdateAppointmentBaseCommandHandler>> _loggerMock = new();
     private readonly Mock<IMediator> _mediatorMock = new();
     private readonly Mock<ICacheService> _cacheServiceMock = new();
 

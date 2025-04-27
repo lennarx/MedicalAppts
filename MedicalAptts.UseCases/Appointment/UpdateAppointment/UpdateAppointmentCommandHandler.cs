@@ -8,27 +8,20 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Appointment.UpdateAppointment
 {
-    public class UpdateAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, IMediator mediator, ILogger<UpdateAppointmentCommandHandler> logger, ICacheService cacheService)
-        : IRequestHandler<UpdateAppointmentCommand, Result<AppointmentDTO, Error>>
+    public class UpdateAppointmentCommandHandler
+        : UpdateAppointmentBaseCommandHandler, IRequestHandler<UpdateAppointmentCommand, Result<AppointmentDTO, Error>>
     {
-        private readonly IAppointmentsRepository _appointmentsRepository = appointmentsRepository;
-        private readonly ILogger<UpdateAppointmentCommandHandler> _logger = logger;
-        private readonly IMediator _mediator = mediator;
-        private readonly ICacheService _cacheService = cacheService;
+        public UpdateAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, ILogger<UpdateAppointmentBaseCommandHandler> logger,
+            IMediator mediator, ICacheService cacheService) : base(appointmentsRepository, logger, mediator, cacheService) { }
         public async Task<Result<AppointmentDTO, Error>> Handle(UpdateAppointmentCommand request, CancellationToken cancellationToken)
         {
-            var appointmentToUpdate = await _appointmentsRepository.GetByIdAsync(request.AppointmentId);
+            var validationResult = await PerformInitialValidation(request);
 
-            if (appointmentToUpdate is null)
+            if (validationResult.ErrorResult != null)
             {
-                _logger.LogError($"Appointment with id {request.AppointmentId} not found");
-                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentNotFound);
+                return validationResult.ErrorResult;
             }
-            if (appointmentToUpdate.PatientId != request.PatientId)
-            {
-                _logger.LogError($"Patient with id {request.PatientId} is not the owner of the appointment with id {request.AppointmentId}");
-                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentNotOwnedByPatient);
-            }
+            var appointmentToUpdate = validationResult.Appointment;
             var doctorId = appointmentToUpdate.DoctorId;
 
             using var transaction = await _appointmentsRepository.BeginTransactionAsync();
@@ -55,12 +48,6 @@ namespace MedicalAptts.UseCases.Appointment.UpdateAppointment
                 return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentUpdateError);
             }
 
-        }
-
-        private async Task RemoveCacheIfExistsAsync(int doctorId, DateTime appointmentDate)
-        {
-            var cacheKey = $"DoctorAvailability:{doctorId}:{appointmentDate:yyyyMMdd}";
-            await _cacheService.RemoveAsync(cacheKey);
         }
     }
 }

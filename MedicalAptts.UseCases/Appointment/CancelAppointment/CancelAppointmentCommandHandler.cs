@@ -10,28 +10,19 @@ using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Appointment.CancelAppointment
 {
-    public class CancelAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, ILogger<CancelAppointmentCommand> logger,
-        IMediator mediator, ICacheService cacheService) : IRequestHandler<CancelAppointmentCommand, Result<AppointmentDTO, Error>>
+    public class CancelAppointmentCommandHandler : UpdateAppointmentBaseCommandHandler, IRequestHandler<CancelAppointmentCommand, Result<AppointmentDTO, Error>>
     {
-        private readonly IAppointmentsRepository _appointmentsRepository = appointmentsRepository;
-        private readonly ILogger<CancelAppointmentCommand> _logger = logger;
-        private readonly IMediator _mediator = mediator;
-        private readonly ICacheService _cacheService = cacheService;
+        public CancelAppointmentCommandHandler(IAppointmentsRepository appointmentsRepository, ILogger<UpdateAppointmentBaseCommandHandler> logger,
+            IMediator mediator, ICacheService cacheService) : base(appointmentsRepository, logger, mediator, cacheService) {}
         public async Task<Result<AppointmentDTO, Error>> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
         {
-            var appointmentToCancel = await _appointmentsRepository.GetByIdAsync(request.AppointmentId);
+            var validationResult = await PerformInitialValidation(request);
 
-            if (appointmentToCancel is null)
+            if(validationResult.ErrorResult != null)
             {
-                _logger.LogError($"Appointment with id {request.AppointmentId} not found");
-                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentNotFound);
-            }
-
-            if (appointmentToCancel.PatientId != request.PatientId)
-            {
-                _logger.LogError($"Patient with id {request.PatientId} is not the owner of the appointment with id {request.AppointmentId}");
-                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentNotOwnedByPatient);
-            }
+                return validationResult.ErrorResult;
+            }            
+            var appointmentToCancel = validationResult.Appointment;
 
             appointmentToCancel.Status = MedicalAppts.Core.Enums.AppointmentStatus.CANCELLED;
 
@@ -51,12 +42,6 @@ namespace MedicalAptts.UseCases.Appointment.CancelAppointment
             }
 
             return Result<AppointmentDTO, Error>.Success(appointmentToCancel.MapToAppointmentDTO());
-        }
-
-        private async Task RemoveCacheIfExistsAsync(int doctorId, DateTime appointmentDate)
-        {
-            var cacheKey = $"DoctorAvailability:{doctorId}:{appointmentDate:yyyyMMdd}";
-            await _cacheService.RemoveAsync(cacheKey);
         }
     }
 }

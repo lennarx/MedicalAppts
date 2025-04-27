@@ -24,8 +24,8 @@ namespace MedicalAppts.Test.Appointment
         {
             _handler = new UpdateAppointmentCommandHandler(
                 _appointmentsRepositoryMock.Object,
+                Mock.Of<ILogger<UpdateAppointmentBaseCommandHandler>>(),
                 _mediatorMock.Object,
-                Mock.Of<ILogger<UpdateAppointmentCommandHandler>>(),
                 _cacheServiceMock.Object);
         }
 
