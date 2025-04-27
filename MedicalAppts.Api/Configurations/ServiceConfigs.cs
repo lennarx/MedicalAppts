@@ -1,5 +1,7 @@
 ﻿using MedicalAppts.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace MedicalAppts.Api.Configurations
 {
@@ -7,7 +9,10 @@ namespace MedicalAppts.Api.Configurations
     {
         public static IServiceCollection AddServiceConfigs(this IServiceCollection services, WebApplicationBuilder builder)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false));
+            });
             services.AddEndpointsApiExplorer();
             services.AddApiVersioning(options =>
             {

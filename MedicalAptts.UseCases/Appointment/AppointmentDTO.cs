@@ -1,4 +1,5 @@
 ﻿using MedicalAppts.Core.Enums;
+using System.Text.Json.Serialization;
 
 namespace MedicalAptts.UseCases.Appointment
 {
@@ -8,6 +9,7 @@ namespace MedicalAptts.UseCases.Appointment
         public string Patient { get; set; }
         public string Doctor { get; set; }
         public DateTime AppointmentDate { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public AppointmentStatus Status { get; set; }
         public string Notes { get; set; }
     }
