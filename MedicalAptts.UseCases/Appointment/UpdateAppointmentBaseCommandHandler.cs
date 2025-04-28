@@ -4,6 +4,9 @@ using MedicalAppts.Core.Contracts;
 using Microsoft.Extensions.Logging;
 using MedicalAppts.Core;
 using MedicalAppts.Core.Errors;
+using MedicalAppts.Core.Events;
+using MedicalAptts.UseCases.Helpers.Extensions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MedicalAptts.UseCases.Appointment
 {
@@ -29,6 +32,23 @@ namespace MedicalAptts.UseCases.Appointment
 
         }
 
+        protected async Task<Result<AppointmentDTO, Error>> TryAppointmentAction(MedicalAppts.Core.Entities.Appointment apptToUpdate, DateTime? newApptDate = null, IDbContextTransaction? tx = null)
+        {
+            try
+            {
+                return await PerformApptAction(apptToUpdate, newApptDate, tx);
+            }
+            catch (Exception ex)
+            {
+                if(tx != null)
+                   await tx.RollbackAsync();
+
+                _logger.LogError($"Action cannot be performed on appointment with id {apptToUpdate.Id} could not be cancelled");
+                _logger.LogError($"{ex}");
+                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentCancellationError);
+            }
+        }
+
         protected Result<AppointmentDTO, Error> ValidateAppointmentToUpdate(MedicalAppts.Core.Entities.Appointment apptToUpdate, int patientId, int apptId)
         {
             if (apptToUpdate is null)
@@ -51,6 +71,8 @@ namespace MedicalAptts.UseCases.Appointment
             var cacheKey = $"DoctorAvailability:{doctorId}:{appointmentDate:yyyyMMdd}";
             await _cacheService.RemoveAsync(cacheKey);
         }
+
+        protected abstract Task<Result<AppointmentDTO, Error>> PerformApptAction(MedicalAppts.Core.Entities.Appointment apptToUpdate, DateTime? appointmentDate = null, IDbContextTransaction? tx = null);
     }
 
     public class UpdateApptValidationResult

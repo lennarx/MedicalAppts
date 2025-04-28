@@ -2,8 +2,10 @@
 using MedicalAppts.Core;
 using MedicalAppts.Core.Contracts;
 using MedicalAppts.Core.Contracts.Repositories;
+using MedicalAppts.Core.Entities;
 using MedicalAppts.Core.Errors;
 using MedicalAptts.UseCases.Appointment.SetAppointment;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace MedicalAptts.UseCases.Appointment.UpdateAppointment
@@ -24,30 +26,26 @@ namespace MedicalAptts.UseCases.Appointment.UpdateAppointment
             var appointmentToUpdate = validationResult.Appointment;
             var doctorId = appointmentToUpdate.DoctorId;
 
+
             using var transaction = await _appointmentsRepository.BeginTransactionAsync();
 
+            return await TryAppointmentAction(appointmentToUpdate, request.NewDate, transaction);
+        }
 
-            try
-            {
-                await _appointmentsRepository.DeleteAsync(appointmentToUpdate.Id);
+        protected override async Task<Result<AppointmentDTO, Error>> PerformApptAction(MedicalAppts.Core.Entities.Appointment apptToUpdate, DateTime? newApptDate = null, IDbContextTransaction? tx = null)
+        {
+            await _appointmentsRepository.DeleteAsync(apptToUpdate.Id);
 
-                var result =  await _mediator.Send(new SetAppointmentCommand(request.PatientId, doctorId, request.NewDate!.Value));
+            var result = await _mediator.Send(new SetAppointmentCommand(apptToUpdate.PatientId, apptToUpdate.DoctorId, newApptDate!.Value));
 
-                if (result.Error != null)
-                    await transaction.RollbackAsync();
-                else
-                    await transaction.CommitAsync();
-                    await RemoveCacheIfExistsAsync(doctorId, appointmentToUpdate.AppointmentDate);
+            if (result.Error != null)
+                await tx.RollbackAsync();
+            else
+                await tx.CommitAsync();
+            
+            await RemoveCacheIfExistsAsync(apptToUpdate.DoctorId, apptToUpdate.AppointmentDate);
 
-                return result;
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error updating appointment");
-                return Result<AppointmentDTO, Error>.Failure(GenericErrors.AppointmentUpdateError);
-            }
-
+            return result;
         }
     }
 }
