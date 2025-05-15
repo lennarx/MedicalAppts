@@ -21,7 +21,7 @@ jobs:
       run: dotnet restore MedicalAppts.sln
 
     - name: Run tests
-      run: dotnet test MedicalAppts.sln --no-build --verbosity normal
+      run: dotnet test MedicalAppts.sln --configuration Release --verbosity normal
 
     - name: Publish API project
       run: dotnet publish MedicalAppts.Api/MedicalAppts.Api.csproj -c Release -o out
