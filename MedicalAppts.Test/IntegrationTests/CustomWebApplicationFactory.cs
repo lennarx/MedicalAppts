@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram>
     where TProgram : class
 {
+    private readonly string _dbName = $"FakeMedicalApptTestDb_{Guid.NewGuid()}";
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Test");
@@ -38,7 +39,7 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
             services.Remove(descriptor);
 
         services.AddDbContext<MedicalApptsDbContext>(options =>
-            options.UseInMemoryDatabase("FakeMedicalApptTestDb"));
+            options.UseInMemoryDatabase(_dbName));
     }
 
     private void RegisterApplicationServices(IServiceCollection services)

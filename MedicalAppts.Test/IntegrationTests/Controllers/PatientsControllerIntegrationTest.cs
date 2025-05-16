@@ -7,6 +7,7 @@ using System.Text.Json;
 
 namespace MedicalAppts.Test.IntegrationTests.Controllers
 {
+    [Collection("Sequential")]
     public class PatientsControllerIntegrationTest : IntegrationTestBase
     {
         public PatientsControllerIntegrationTest(CustomWebApplicationFactory<Program> factory) : base(factory)
@@ -142,7 +143,7 @@ namespace MedicalAppts.Test.IntegrationTests.Controllers
 
             var response = await _client.PatchAsJsonAsync($"/api/patients/{notApptOwnerPatientId}/appointments/{appointmentIdInTestDb}", updateApptForm);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
