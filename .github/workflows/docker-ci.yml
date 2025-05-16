@@ -36,7 +36,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/medicalappts:${{ github.run_number }} MedicalAppts.Api
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/medicalappts:${{ github.run_number }} -f MedicalAppts.Api/Dockerfile .
 
     - name: Push Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/medicalappts:${{ github.run_number }}
