@@ -17,6 +17,25 @@ It allows patients to schedule appointments, doctors to create and manage their 
 - **JWT** for authentication and authorization  
 - **API Key support** for quick testing without login (Postman / Swagger)
 
+⚙️ CI/CD with GitHub Actions + Docker Hub
+
+This project is fully integrated with **GitHub Actions** for automated builds, tests, and Docker image deployment to Docker Hub.
+
+### ✅ Pipeline Features
+
+- Restores and builds the solution using `.NET 8`
+- Runs all integration and unit tests with `xUnit`
+- Builds the Docker image from the `MedicalAppts.Api/Dockerfile`
+- Pushes the image to Docker Hub using the GitHub `secrets`:
+  - `DOCKER_USERNAME`
+  - `DOCKER_PASSWORD`
+
+Once pushed, the Docker image will be available at:
+
+```
+https://hub.docker.com/r/fredoni/medicalappts
+```
+
 ---
 
 ## 🐳 Docker & Setup
@@ -97,3 +116,5 @@ Full interactive documentation available at **`/swagger`**.
 🧠 Author
 
 Developed by **[lennarx]** – feedback and contributions welcome!
+
+---
